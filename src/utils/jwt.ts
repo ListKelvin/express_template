@@ -1,7 +1,7 @@
 import jwt, { VerifyOptions, SignOptions } from "jsonwebtoken";
-import Audiences from "../constants/audiences";
-import { JWT_SECRET } from "../constants/env";
-import { UserDocument } from "../models/user.model";
+import Roles from "../constant/roles";
+import { JWT_SECRET } from "../constant/env";
+import { User } from "../models/user.model";
 import { SessionDocument } from "../models/session.model";
 
 const ACCESS_TOKEN_EXP = "15m";
@@ -12,7 +12,7 @@ export type RefreshToken = {
 };
 
 export type AccessToken = {
-  userId: UserDocument["_id"];
+  userId: User["_id"];
   sessionId: SessionDocument["_id"];
 };
 
@@ -24,7 +24,7 @@ export const signToken = (
 ) => {
   const { secret = JWT_SECRET, ...opts } = options || {};
   return jwt.sign(payload, secret, {
-    audience: [Audiences.USER],
+    audience: [Roles.USER],
     expiresIn: ACCESS_TOKEN_EXP,
     ...opts,
   });
@@ -39,7 +39,7 @@ export const verifyToken = <T extends object = AccessToken>(
   const { secret = JWT_SECRET, ...opts } = options || {};
   try {
     const payload = jwt.verify(token, secret, {
-      audience: [Audiences.USER],
+      audience: [Roles.USER],
       ...opts,
     }) as T;
     return {
