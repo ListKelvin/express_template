@@ -1,18 +1,34 @@
+// import "dotenv/config";
 import express from "express";
+import cors from "cors";
+import cookieParser from "cookie-parser";
 import connectToDatabase from "./config/db";
-import { NODE_ENV, PORT } from "./constant/env";
-import userRoutes from "./routes/user.route";
-import authenticate from "./middleware/authenticate";
 import errorHandler from "./middleware/errorHandler";
+import authenticate from "./middleware/authenticate";
+import authRoutes from "./routes/auth.route";
+import userRoutes from "./routes/user.route";
+import sessionRoutes from "./routes/session.route";
+import { APP_ORIGIN, NODE_ENV, PORT } from "./constant/env";
 
+// initialize modules and middleware
 const app = express();
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-// app.use("/auth", authRoutes);
+app.use(
+  cors({
+    // origin: APP_ORIGIN,
+    credentials: true,
+  })
+);
+app.use(cookieParser());
 
-// protected routes authenticate,
-app.use("/user", userRoutes);
-// app.use("/sessions", authenticate, sessionRoutes);
+// auth routes
+app.use("/auth", authRoutes);
+
+// protected routes
+app.use("/user", authenticate, userRoutes);
+app.use("/sessions", authenticate, sessionRoutes);
 
 // error handler
 app.use(errorHandler);

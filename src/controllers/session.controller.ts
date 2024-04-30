@@ -1,11 +1,11 @@
 // @ts-nocheck
 import Joi from "joi";
-import { NOT_FOUND, OK } from "../constants/http";
+import { NOT_FOUND, OK } from "../constant/http";
 import SessionModel from "../models/session.model";
 import catchErrors from "../utils/catchErrors";
 import validateRequest from "../utils/validateRequest";
 import appAssert from "../utils/appAssert";
-import { NotFound } from "../constants/appErrorCodes";
+import { NotFound } from "../constant/appErrorCodes";
 
 export const getSessionsHandler = catchErrors(async (req, res) => {
   const sessions = await SessionModel.find(

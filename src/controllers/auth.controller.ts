@@ -1,5 +1,5 @@
-import AppErrorCodes from "../constants/appErrorCodes";
-import { CREATED, NOT_FOUND, OK, UNAUTHORIZED } from "../constants/http";
+import AppErrorCodes from "../constant/appErrorCodes";
+import { CREATED, NOT_FOUND, OK, UNAUTHORIZED } from "../constant/http";
 import SessionModel from "../models/session.model";
 import {
   createAccount,
@@ -25,7 +25,7 @@ import {
   resetPasswordSchema,
   verificationCodeSchema,
 } from "./auth.schemas";
-import VerificationCodeTypes from "../constants/verificationCodeTypes";
+import VerificationCodeTypes from "../constant/verificationCodeTypes";
 import VerificationCodeModel from "../models/verificationCode.model";
 
 const { InvalidRefreshToken, NotFound } = AppErrorCodes;
