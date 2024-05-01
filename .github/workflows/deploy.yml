@@ -1,0 +1,8 @@
+name: Express Backend API Pipeline
+on:
+  push:
+    branches:
+      - main
+    paths:
+      - compose.yml
+      - .github/workflows/*.yml
