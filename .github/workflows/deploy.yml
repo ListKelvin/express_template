@@ -60,7 +60,7 @@ jobs:
       - name: Copy docker-compose file
 
         run: |
-          ls -a
+          pwd
           scp -oStrictHostKeyChecking=no compose.yml ${{ secrets.VPS_USERNAME }}@${{
           secrets.VPS_IP }}:express_api/docker-compose.yml ${{ secrets.SSH_PRIVATE_KEY }}
 
