@@ -56,7 +56,8 @@ jobs:
             mkdir -p express_api
 
       - name: Copy docker-compose file
-        run:
+        run:|
+          ls -a
           scp -oStrictHostKeyChecking=no compose.yml ${{ secrets.VPS_USERNAME }}@${{
           secrets.VPS_IP }}:express_api/docker-compose.yml ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Set ENV variable and deploy
