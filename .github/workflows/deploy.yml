@@ -11,8 +11,10 @@ jobs:
     name: build docker images stage
     runs-on: ubuntu-latest
     steps:
-      - name: Get commit SHA (shortened)
+      - name: Checkout Code
         uses: actions/checkout@v4
+
+      - name: Get commit SHA (shortened)
         id: extract_version
         run: |
           git_short_sha=$(git rev-parse --short HEAD)
