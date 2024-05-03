@@ -62,7 +62,7 @@ jobs:
           pwd
           ls
           scp -oStrictHostKeyChecking=no ~/home/runner/work/express_template/compose.yml ${{ secrets.VPS_USERNAME }}@${{
-          secrets.VPS_IP }}:express_api/docker-compose.yml ${{ secrets.SSH_PRIVATE_KEY }}
+          secrets.VPS_IP }}:express_api/docker-compose.yml
 
       - name: Set ENV variable and deploy
         run: |
