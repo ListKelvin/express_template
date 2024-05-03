@@ -20,7 +20,7 @@ jobs:
           git_short_sha=$(git rev-parse --short HEAD)
           echo "## Setting Docker tag with commit SHA..."
           echo "IMAGE_TAG=your_image_name:${git_short_sha}" >> $GITHUB_ENV  # Store in environment variable
-          echo ${IMAGE_TAG}
+          echo "$GITHUB_ENV"
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
