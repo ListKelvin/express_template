@@ -45,9 +45,8 @@ jobs:
       - build-images
     steps:
       - name: Create deployment folder
-        run:
-          ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} ${{ secrets.SSH_PRIVATE_KEY }} "mkdir -p
-          express_api"
+        run: ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} "mkdir -p
+          express_api" ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Copy docker-compose file
         run: |
