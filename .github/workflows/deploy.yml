@@ -45,23 +45,14 @@ jobs:
       - build-images
     steps:
       - name: Create deployment folder
-        # run: ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} "mkdir -p
-        #   express_api"
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.VPS_IP }}
-          username: ${{ secrets.VPS_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          script: |
-            mkdir -p express_api
-      # - name: Checkout Code
-      #   uses: actions/checkout@v4
+        run:
+          ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} ${{ secrets.SSH_PRIVATE_KEY }} "mkdir -p
+          express_api"
 
       - name: Copy docker-compose file
-
         run: |
           pwd
-          scp -oStrictHostKeyChecking=no /home/runner/work/express_template/compose.yml ${{ secrets.VPS_USERNAME }}@${{
+          scp -oStrictHostKeyChecking=no compose.yml ${{ secrets.VPS_USERNAME }}@${{
           secrets.VPS_IP }}:express_api/docker-compose.yml ${{ secrets.SSH_PRIVATE_KEY }}
 
       - name: Set ENV variable and deploy
