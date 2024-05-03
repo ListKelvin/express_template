@@ -58,7 +58,7 @@ jobs:
       - name: Copy docker-compose file
         run:
           scp -oStrictHostKeyChecking=no compose.yml ${{ secrets.VPS_USERNAME }}@${{
-          secrets.VPS_IP }}:express_api/docker-compose.yml
+          secrets.VPS_IP }}:express_api/docker-compose.yml ${{ secrets.SSH_PRIVATE_KEY }}
       - name: Set ENV variable and deploy
         run: |
           ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} <<EOF
