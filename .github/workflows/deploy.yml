@@ -11,15 +11,13 @@ jobs:
     name: build docker images stage
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout code
+      - name: Get commit SHA (shortened)
         uses: actions/checkout@v4
-        # with:
-        #   ref: ${{ github.event.release.tag_name }}
-      - name: Extract project version
         id: extract_version
-        run: >
-          echo "VERSION= ${{ github.event.release.tag_name }}" >>
-          $GITHUB_OUTPUT
+        run: |
+          git_short_sha=$(git rev-parse --short HEAD)
+          echo "## Setting Docker tag with commit SHA..."
+          echo "IMAGE_TAG=your_image_name:${git_short_sha}" >> $GITHUB_ENV  # Store in environment variable
       - name: Login to DockerHub
         uses: docker/login-action@v3
         with:
