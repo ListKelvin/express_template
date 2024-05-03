@@ -58,11 +58,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Copy docker-compose file
-        run: |
-          pwd
-          ls
-          scp -oStrictHostKeyChecking=no ~/home/runner/work/express_template/compose.yml ${{ secrets.VPS_USERNAME }}@${{
-          secrets.VPS_IP }}:express_api/docker-compose.yml
+         uses: appleboy/ssh-action@v1.0.3
+         with:
+            host: ${{ secrets.VPS_IP }}
+            username: ${{ secrets.VPS_USERNAME }}
+            key: ${{ secrets.SSH_PRIVATE_KEY }}
+            script: |
+                 scp -oStrictHostKeyChecking=no compose.yml express_api/docker-compose.yml
+ 
 
       - name: Set ENV variable and deploy
         run: |
