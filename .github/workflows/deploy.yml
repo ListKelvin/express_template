@@ -6,3 +6,46 @@ on:
     paths:
       - compose.yml
       - .github/workflows/*.yml
+  jobs:
+    build-images:
+      name: build docker images stage
+      runs-on: ubuntu-latest
+      steps:
+        - name: Login to DockerHub
+          uses: docker/login-action@v3
+          with:
+            username: ${{ secrets.DOCKERHUB_USERNAME }}
+            password: ${{ secrets.DOCKERHUB_TOKEN }}
+        - name: Build & Push to DockerHub
+          uses: docker/build-push-action@v5
+          with:
+            context: .
+            file: Dockerfile
+            push: true
+            platforms: linux/amd64
+            tags: ${{ secrets.DOCKERHUB_USERNAME }}/express_api:${{
+              steps.extract_version.outputs.VERSION }},${{
+              secrets.DOCKERHUB_USERNAME }}/express_api:latest
+            build-args: |
+              PROFILE=dev
+              APP_VERSION=${{ steps.extract_version.outputs.VERSION }}
+    deploy:
+      name: Deploy Backend
+      runs-on: ubuntu-latest
+      needs:
+        - build-image
+      steps:
+        - name: Create deployment folder
+          run: ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} "mkdir -p
+            eduLight-ci-cd"
+        - name: Copy docker-compose file
+          run:
+            scp -oStrictHostKeyChecking=no compose.yml ${{ secrets.VPS_USERNAME }}@${{
+            secrets.VPS_IP }}:eduLight-ci-cd/docker-compose.yml
+        - name: Set ENV variable and deploy
+          run: |
+            ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} <<EOF
+            cd eduLight-ci-cd
+            docker compose -f docker-compose.yml pull -q
+            docker compose -f docker-compose.yml up -d
+            EOF

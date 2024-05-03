@@ -1,12 +1,11 @@
-FROM node:18
+FROM node:18-alpine
 
 WORKDIR /app
-COPY package*.json /app
+
+COPY . .
 
 RUN npm install
 
-COPY  /dist /app
-
-EXPOSE 8080
+RUN npm run build
 
 CMD ["npm", "start"]
