@@ -63,9 +63,10 @@ jobs:
           ls -a
           scp -oStrictHostKeyChecking=no compose.yml ${{ secrets.VPS_USERNAME }}@${{
           secrets.VPS_IP }}:express_api/docker-compose.yml ${{ secrets.SSH_PRIVATE_KEY }}
+
       - name: Set ENV variable and deploy
         run: |
-          ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} <<EOF
+          ssh ${{ secrets.VPS_USERNAME }}@${{ secrets.VPS_IP }} ${{ secrets.SSH_PRIVATE_KEY }} <<EOF
           cd express_api
           docker compose -f docker-compose.yml pull -q
           docker compose -f docker-compose.yml up -d
