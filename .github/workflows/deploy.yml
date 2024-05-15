@@ -64,9 +64,7 @@ jobs:
           username: ${{ secrets.VPS_USERNAME }}
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            ls -a
-            pwd
-            scp -oStrictHostKeyChecking=no compose.yml express_api/docker-compose.yml
+            scp -o StrictHostKeyChecking=no compose.yml express_api/docker-compose.yml
 
       - name: Set ENV variable and deploy
         run: |
