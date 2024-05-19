@@ -11,28 +11,28 @@ import sessionRoutes from "./routes/session.route";
 import { APP_ORIGIN, NODE_ENV, PORT } from "./constant/env";
 import { buildSchema } from "graphql";
 import { createHandler } from "graphql-http";
+import { getAllUser } from "./services/user.service";
 // initialize modules and middleware
+
 const app = express();
 // Construct a schema, using GraphQL schema language
 var schema = buildSchema(`
+  type User {
+    email: string
+  }
+
   type Query {
-    hello: String
+    users: [User]
   }
 `);
 
 // The root provides a resolver function for each API endpoint
 var root = {
-  hello() {
-    return "Hello world!";
+  users() {
+    return getAllUser().user;
   },
 };
-app.all(
-  "/graphql",
-  createHandler({
-    schema: schema,
-    rootValue: root,
-  })
-);
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -42,12 +42,18 @@ app.use(
   })
 );
 app.use(cookieParser());
-
+app.all(
+  "/graphql",
+  createHandler({
+    schema: schema,
+    rootValue: root,
+  })
+);
 // // auth routes
 // app.use("/auth", authRoutes);
 
 // // protected routes
-// app.use("/user", authenticate, userRoutes);
+app.use("/user", userRoutes);
 // app.use("/sessions", authenticate, sessionRoutes);
 
 // error handler

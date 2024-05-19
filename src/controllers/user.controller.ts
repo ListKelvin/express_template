@@ -10,3 +10,8 @@ export const getUserHandler = catchErrors(async (req, res) => {
   appAssert(user, NotFound, "User not found", NOT_FOUND);
   return res.status(OK).json(user.omitPassword());
 });
+export const getAllUserHandler = catchErrors(async (req, res) => {
+  const user = await UserModel.find();
+
+  return res.status(OK).json(user);
+});
