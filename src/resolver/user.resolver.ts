@@ -1,9 +1,6 @@
 import { getAllUser } from "./../services/user.service";
 
 const userResolvers = {
-  //QUERY
-  Query: {
-    users: () => getAllUser().user,
-  },
+  getUsers: () => getAllUser().user,
 };
 export { userResolvers };

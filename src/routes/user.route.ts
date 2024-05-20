@@ -7,7 +7,7 @@ import {
 const userRoutes = Router();
 
 // prefix: /user
-userRoutes.get("/", getUserHandler);
+userRoutes.get("/", getAllUserHandler);
 
-userRoutes.get("/all", getAllUserHandler);
+userRoutes.get("/:id", getUserHandler);
 export default userRoutes;
