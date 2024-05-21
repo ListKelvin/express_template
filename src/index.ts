@@ -7,6 +7,7 @@ import errorHandler from "./middleware/errorHandler";
 import authenticate from "./middleware/authenticate";
 import authRoutes from "./routes/auth.route";
 import userRoutes from "./routes/user.route";
+import nationRoutes from "./routes/nation.route";
 import sessionRoutes from "./routes/session.route";
 import { APP_ORIGIN, NODE_ENV, PORT } from "./constant/env";
 
@@ -29,6 +30,8 @@ app.use("/auth", authRoutes);
 
 // // protected routes
 app.use("/user", authenticate, userRoutes);
+app.use("/nation", nationRoutes);
+
 app.use("/sessions", authenticate, sessionRoutes);
 
 // error handler

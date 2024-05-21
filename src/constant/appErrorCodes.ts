@@ -7,6 +7,7 @@ enum AppErrorCodes {
   RateLimitExceeded = "RateLimitExceeded",
   EmailInUse = "EmailInUse",
   Unknown = "Unknown",
+  ValidateFailed = "ValidateFailed",
 }
 
 export default AppErrorCodes;

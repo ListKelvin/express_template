@@ -16,6 +16,7 @@ const validateRequest: ValidateRequest = (schema, payload, opts = {}) => {
     ...defaults,
     ...opts,
   });
+
   if (error) throw error;
 
   return value;

@@ -24,7 +24,7 @@ import {
   registerSchema,
   resetPasswordSchema,
   verificationCodeSchema,
-} from "./auth.schemas";
+} from "../schema/auth.schemas";
 import VerificationCodeTypes from "../constant/verificationCodeTypes";
 import VerificationCodeModel from "../models/verificationCode.model";
 
