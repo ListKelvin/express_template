@@ -10,6 +10,7 @@ import userRoutes from "./routes/user.route";
 import nationRoutes from "./routes/nation.route";
 import sessionRoutes from "./routes/session.route";
 import { APP_ORIGIN, NODE_ENV, PORT } from "./constant/env";
+import playerRoutes from "./routes/player.route";
 
 // initialize modules and middleware
 
@@ -31,7 +32,7 @@ app.use("/auth", authRoutes);
 // // protected routes
 app.use("/user", authenticate, userRoutes);
 app.use("/nation", nationRoutes);
-
+app.use("/player", playerRoutes);
 app.use("/sessions", authenticate, sessionRoutes);
 
 // error handler
