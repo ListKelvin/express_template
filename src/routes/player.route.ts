@@ -1,21 +1,21 @@
 import { Router } from "express";
+
 import {
-  createNationHandler,
-  deleteNationHandler,
-  getAllNationHandler,
-  getNationByIdHandler,
-  updateNationHandler,
-} from "../controllers/nation.controller";
-import { createPlayerHandler } from "../controllers/player.controller";
+  createPlayerHandler,
+  deletePlayerHandler,
+  getAllPlayerHandler,
+  getPlayerByIdHandler,
+  updatePlayerHandler,
+} from "../controllers/player.controller";
 
 const playerRoutes = Router();
 
 //prefix: /player
 
-playerRoutes.get("/", getAllNationHandler);
-playerRoutes.get("/:id", getNationByIdHandler);
-playerRoutes.put("/:id", updateNationHandler);
+playerRoutes.get("/", getAllPlayerHandler);
+playerRoutes.get("/:id", getPlayerByIdHandler);
+playerRoutes.put("/:id", updatePlayerHandler);
 playerRoutes.post("/", createPlayerHandler);
-playerRoutes.delete("/:id", deleteNationHandler);
+playerRoutes.delete("/:id", deletePlayerHandler);
 
 export default playerRoutes;
