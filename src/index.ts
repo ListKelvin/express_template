@@ -11,7 +11,9 @@ import nationRoutes from "./routes/nation.route";
 import sessionRoutes from "./routes/session.route";
 import { APP_ORIGIN, NODE_ENV, PORT } from "./constant/env";
 import playerRoutes from "./routes/player.route";
-
+import path from "path";
+import { engine } from "express-handlebars";
+import moment from "moment";
 // initialize modules and middleware
 
 const app = express();
@@ -35,6 +37,34 @@ app.use("/nation", nationRoutes);
 app.use("/player", playerRoutes);
 app.use("/sessions", authenticate, sessionRoutes);
 
+app.set("view engine", "hbs");
+app.set("views", path.join(__dirname + "/views"));
+app.engine(
+  "hbs",
+  engine({
+    defaultLayout: "main",
+    extname: ".hbs",
+    helpers: {
+      inc: function (value: any, options: any) {
+        return parseInt(value) + 1;
+      },
+      prettifyDate: function (timestamp: any) {
+        return moment(timestamp, "YYYY-MM-DDTHH:mm:ss.SSS").format(
+          "YYYY-MM-DD HH:mm"
+        );
+      },
+      commentDate: function (timestamp: any) {
+        console.log(timestamp, moment(timestamp).format("MMM. Do YYYY HH:MM"));
+        return moment(timestamp, "YYYY-MM-DDTHH:mm:ss.SSS").format(
+          "MMM. Do YYYY HH:mm"
+        );
+      },
+      ifEquals: function (arg1: any, arg2: any, options: any) {
+        return arg1 == arg2 ? options.fn(this) : options.inverse(this);
+      },
+    },
+  })
+);
 // error handler
 app.use(errorHandler);
 
