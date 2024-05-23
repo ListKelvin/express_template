@@ -65,6 +65,10 @@ app.engine(
     },
   })
 );
+app.get("/", (req, res) => {
+  res.render("home");
+});
+
 // error handler
 app.use(errorHandler);
 
