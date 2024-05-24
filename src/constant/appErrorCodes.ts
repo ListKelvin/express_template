@@ -8,6 +8,7 @@ enum AppErrorCodes {
   EmailInUse = "EmailInUse",
   Unknown = "Unknown",
   ValidateFailed = "ValidateFailed",
+  MemberInUse = "MemberInUse",
 }
 
 export default AppErrorCodes;

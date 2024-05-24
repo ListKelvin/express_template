@@ -9,6 +9,7 @@ import {
   UNPROCESSABLE_CONTENT,
 } from "../constant/http";
 import VerificationCodeTypes from "../constant/verificationCodeTypes";
+import MemberModal, { Member } from "../models/member.model";
 import SessionModel, { SessionDocument } from "../models/session.model";
 import UserModel, { User } from "../models/user.model";
 import VerificationCodeModel, {
@@ -39,22 +40,24 @@ const {
 } = AppErrorCodes;
 
 export const createAccount = async (
-  data: Pick<User, "email" | "password"> & Pick<SessionDocument, "userAgent">
+  data: Pick<Member, "email" | "memberName" | "password"> &
+    Pick<SessionDocument, "userAgent">
 ) => {
   // verify email is not taken
-  const existingUser = await UserModel.exists({
+  const existingMember = await MemberModal.exists({
     email: data.email,
   });
-  appAssert(!existingUser, EmailInUse, "Email already in use", CONFLICT);
+  appAssert(!existingMember, EmailInUse, "Email already in use", CONFLICT);
 
-  const user = await UserModel.create({
+  const member = await MemberModal.create({
     email: data.email,
+    memberName: data.memberName,
     password: data.password,
   });
 
   // send verification email
   const verificationCode = await VerificationCodeModel.create({
-    userId: user._id,
+    memberId: member._id,
     type: VerificationCodeTypes.EMAIL_VERIFICATION,
     expiresAt: oneYearFromNow(),
   });
@@ -62,7 +65,7 @@ export const createAccount = async (
   const url = `${APP_ORIGIN}/email/verify/${verificationCode._id}`;
 
   const { error } = await sendMail({
-    to: user.email,
+    to: member.email,
     ...getVerifyEmailTemplate(url),
   });
   // ignore email errors for now
@@ -70,7 +73,7 @@ export const createAccount = async (
 
   // create session
   const session = await SessionModel.create({
-    userId: user._id,
+    memberId: member._id,
     userAgent: data.userAgent,
     createdAt: new Date(),
   });
@@ -91,29 +94,32 @@ export const createAccount = async (
       expiresIn: REFRESH_TOKEN_EXP,
     }
   );
-  const accessToken = signToken({ userId: user._id, sessionId: session._id });
-  return { user: user.omitPassword(), accessToken, refreshToken };
+  const accessToken = signToken({
+    memberId: member._id,
+    sessionId: session._id,
+  });
+  return { member: member.omitPassword(), accessToken, refreshToken };
 };
 
 export const loginUser = async ({
-  email,
+  memberName,
   password,
   userAgent,
-}: Pick<User, "email" | "password"> & { userAgent: string }) => {
-  const user = await UserModel.findOne({ email });
-  appAssert(user, NotFound, "Invalid email or password", NOT_FOUND);
+}: Pick<Member, "memberName" | "password"> & { userAgent: string }) => {
+  const member = await MemberModal.findOne({ memberName });
+  appAssert(member, NotFound, "Invalid member or password", NOT_FOUND);
 
-  const isValid = await user.comparePassword(password);
+  const isValid = await member.comparePassword(password);
   appAssert(
     isValid,
     InvalidCredentials,
-    "Invalid email or password",
+    "Invalid member name or password",
     UNAUTHORIZED
   );
 
-  const userId = user._id;
+  const memberId = member._id;
   const session = await SessionModel.create({
-    userId,
+    memberId,
     userAgent,
     createdAt: new Date(),
   });
@@ -132,7 +138,7 @@ export const loginUser = async ({
     expiresIn: REFRESH_TOKEN_EXP,
   });
 
-  const accessToken = signToken({ ...sessionInfo, userId });
+  const accessToken = signToken({ ...sessionInfo, memberId });
   return { accessToken, refreshToken };
 };
 
@@ -150,7 +156,7 @@ export const verifyEmail = async (code: VerificationCodeDocument["_id"]) => {
   );
 
   const updatedUser = await UserModel.findByIdAndUpdate(
-    validCode.userId,
+    validCode.memberId,
     {
       verified: true,
     },
@@ -186,7 +192,7 @@ export const refreshUserAccessToken = async (refreshToken: string) => {
 
   // create new access token
   const accessToken = signToken({
-    userId: session.userId,
+    memberId: session.userId,
     sessionId: session._id,
   });
 
@@ -194,13 +200,13 @@ export const refreshUserAccessToken = async (refreshToken: string) => {
 };
 
 export const sendPasswordResetEmail = async (email: User["email"]) => {
-  const user = await UserModel.findOne({ email });
-  appAssert(user, NotFound, "User not found", UNPROCESSABLE_CONTENT);
+  const member = await MemberModal.findOne({ email });
+  appAssert(member, NotFound, "User not found", UNPROCESSABLE_CONTENT);
 
   // check for max password reset requests (2 emails in 5min)
   const fiveMinAgo = fiveMinutesAgo();
   const count = await VerificationCodeModel.countDocuments({
-    userId: user._id,
+    memberId: member._id,
     type: VerificationCodeTypes.PASSWORD_RESET,
     createdAt: { $gt: fiveMinAgo },
   });
@@ -213,7 +219,7 @@ export const sendPasswordResetEmail = async (email: User["email"]) => {
 
   const expiresAt = oneHourFromNow();
   const verificationCode = await VerificationCodeModel.create({
-    userId: user._id,
+    memberId: member._id,
     type: VerificationCodeTypes.PASSWORD_RESET,
     expiresAt,
   });
@@ -258,7 +264,7 @@ export const resetPassword = async ({
     UNPROCESSABLE_CONTENT
   );
 
-  const updatedUser = await UserModel.findByIdAndUpdate(validCode.userId, {
+  const updatedUser = await UserModel.findByIdAndUpdate(validCode.memberId, {
     password: await hashValue(password),
   });
   appAssert(
@@ -271,7 +277,7 @@ export const resetPassword = async ({
   await VerificationCodeModel.findByIdAndDelete(validCode._id);
 
   // delete all sessions
-  await SessionModel.deleteMany({ userId: validCode.userId });
+  await SessionModel.deleteMany({ userId: validCode.memberId });
 
   return true;
 };

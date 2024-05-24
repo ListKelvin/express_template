@@ -3,6 +3,7 @@ import Roles from "../constant/roles";
 import { JWT_SECRET } from "../constant/env";
 import { User } from "../models/user.model";
 import { SessionDocument } from "../models/session.model";
+import { Member } from "../models/member.model";
 
 const ACCESS_TOKEN_EXP = "15m";
 export const REFRESH_TOKEN_EXP = "30d";
@@ -12,7 +13,7 @@ export type RefreshToken = {
 };
 
 export type AccessToken = {
-  userId: User["_id"];
+  memberId: Member["_id"];
   sessionId: SessionDocument["_id"];
 };
 

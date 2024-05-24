@@ -20,29 +20,64 @@ import catchErrors from "../utils/catchErrors";
 import validateRequest from "../utils/validateRequest";
 import {
   emailSchema,
+  loginMemberSchema,
   loginSchema,
-  registerSchema,
+  registerMemberSchema,
   resetPasswordSchema,
   verificationCodeSchema,
 } from "../schema/auth.schemas";
 import VerificationCodeTypes from "../constant/verificationCodeTypes";
 import VerificationCodeModel from "../models/verificationCode.model";
+import { Response } from "express";
 
 const { InvalidRefreshToken, NotFound } = AppErrorCodes;
 
+export const renderLogin = (req: any, res: Response) => {
+  try {
+    res.render("./auth/login", {
+      layout: false,
+      // isLoggedIn: !!req.session.user,
+      // user: req.session.user,
+    });
+  } catch (err: any) {
+    res.render("404", {
+      // isLoggedIn: !!req.session.user,
+      // user: req.session.user,
+    });
+  }
+};
+export const renderSignup = (req: any, res: Response) => {
+  try {
+    res.render("./auth/signup", {
+      layout: false,
+      // isLoggedIn: !!req.session.user,
+      // user: req.session.user,
+    });
+  } catch (err: any) {
+    res.render("404", {
+      isLoggedIn: !!req.session.user,
+      user: req.session.user,
+    });
+  }
+};
+
 export const registerHandler = catchErrors(async (req, res) => {
-  const request = validateRequest(registerSchema, {
+  const request = validateRequest(registerMemberSchema, {
     ...req.body,
     userAgent: req.headers["user-agent"],
   });
-  const { user, accessToken, refreshToken } = await createAccount(request);
-  return setAuthCookies({ res, accessToken, refreshToken })
-    .status(CREATED)
-    .json(user);
+  const { member, accessToken, refreshToken } = await createAccount(request);
+
+  return (
+    setAuthCookies({ res, accessToken, refreshToken })
+      .status(CREATED)
+      // .json(member)
+      .redirect("/auth/login")
+  );
 });
 
 export const loginHandler = catchErrors(async (req, res) => {
-  const request = validateRequest(loginSchema, {
+  const request = validateRequest(loginMemberSchema, {
     ...req.body,
     userAgent: req.headers["user-agent"],
   });
@@ -51,7 +86,7 @@ export const loginHandler = catchErrors(async (req, res) => {
   // set cookies
   return setAuthCookies({ res, accessToken, refreshToken })
     .status(OK)
-    .json({ message: "Login successful" });
+    .render("./home", { error: null, message: "Login successful" });
 });
 
 export const logoutHandler = catchErrors(async (req, res) => {

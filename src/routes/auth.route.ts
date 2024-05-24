@@ -7,13 +7,16 @@ import {
   registerHandler,
   resetPasswordHandler,
   verifyEmailHandler,
+  renderSignup,
+  renderLogin,
 } from "../controllers/auth.controller";
 
 const authRoutes = Router();
 
 // prefix: /auth
-authRoutes.post("/register", registerHandler);
-authRoutes.post("/login", loginHandler);
+
+authRoutes.route("/register").get(renderSignup).post(registerHandler);
+authRoutes.route("/login").get(renderLogin).post(loginHandler);
 authRoutes.get("/refresh", refreshHandler);
 authRoutes.get("/logout", logoutHandler);
 authRoutes.get("/email/verify/:code", verifyEmailHandler);
