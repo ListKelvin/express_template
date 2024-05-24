@@ -22,7 +22,7 @@
         class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
       >
         <a
-          href="/"
+          href="#"
           class="flex items-center mb-6 text-2xl font-semibold text-gray-900 dark:text-white"
         >
           {{! <img class="w-8 h-8 mr-2" src="/assets/logo.png" alt="logo" /> }}
@@ -37,6 +37,11 @@
             >
               Create and account
             </h1>
+            {{#if error}}
+              <p class="text-sm text-red-400 dark:text-red mt-0">
+                {{error.message}}
+              </p>
+            {{/if}}
             <form
               class="space-y-4 md:space-y-6"
               action="/auth/register"

@@ -18,7 +18,7 @@ const authenticate: RequestHandler = (req, res, next) => {
     error === "jwt expired" ? "Token expired" : "Invalid token",
     UNAUTHORIZED
   );
-  req.userId = payload.userId;
+  req.userId = payload.memberId;
   req.sessionId = payload.sessionId;
   next();
 };

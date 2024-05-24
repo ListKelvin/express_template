@@ -35,9 +35,9 @@ app.use("/auth", authRoutes);
 
 // // protected routes
 app.use("/user", authenticate, userRoutes);
+app.use("/sessions", authenticate, sessionRoutes);
 app.use("/nation", nationRoutes);
 app.use("/player", playerRoutes);
-app.use("/sessions", authenticate, sessionRoutes);
 
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname + "/views"));
