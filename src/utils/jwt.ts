@@ -14,6 +14,7 @@ export type RefreshToken = {
 
 export type AccessToken = {
   memberId: Member["_id"];
+  role: Member["role"];
   sessionId: SessionDocument["_id"];
 };
 
@@ -25,7 +26,7 @@ export const signToken = (
 ) => {
   const { secret = JWT_SECRET, ...opts } = options || {};
   return jwt.sign(payload, secret, {
-    audience: [Roles.USER],
+    audience: [Roles.MEMBER],
     expiresIn: ACCESS_TOKEN_EXP,
     ...opts,
   });
@@ -40,7 +41,7 @@ export const verifyToken = <T extends object = AccessToken>(
   const { secret = JWT_SECRET, ...opts } = options || {};
   try {
     const payload = jwt.verify(token, secret, {
-      audience: [Roles.USER],
+      audience: [Roles.MEMBER],
       ...opts,
     }) as T;
     return {

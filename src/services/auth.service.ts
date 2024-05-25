@@ -8,6 +8,7 @@ import {
   UNAUTHORIZED,
   UNPROCESSABLE_CONTENT,
 } from "../constant/http";
+import Roles from "../constant/roles";
 import VerificationCodeTypes from "../constant/verificationCodeTypes";
 import MemberModal, { Member } from "../models/member.model";
 import SessionModel, { SessionDocument } from "../models/session.model";
@@ -53,6 +54,7 @@ export const createAccount = async (
     email: data.email,
     memberName: data.memberName,
     password: data.password,
+    role: Roles.MEMBER,
   });
 
   // send verification email
@@ -96,6 +98,7 @@ export const createAccount = async (
   );
   const accessToken = signToken({
     memberId: member._id,
+    role: member.role,
     sessionId: session._id,
   });
   return { member: member.omitPassword(), accessToken, refreshToken };

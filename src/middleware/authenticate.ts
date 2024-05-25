@@ -10,7 +10,11 @@ const { InvalidAccessToken } = AppErrorCodes;
 const authenticate: RequestHandler = (req, res, next) => {
   const { accessToken } = req.cookies;
   appAssert(accessToken, InvalidAccessToken, "Not authorized", UNAUTHORIZED);
-
+  if (accessToken) {
+    next();
+  } else {
+    res.render("400", { error: "Not authorized" });
+  }
   const { error, payload } = verifyToken(accessToken);
   appAssert(
     payload,
@@ -18,9 +22,17 @@ const authenticate: RequestHandler = (req, res, next) => {
     error === "jwt expired" ? "Token expired" : "Invalid token",
     UNAUTHORIZED
   );
+
+  if (payload.memberId && payload.sessionId) {
+    next();
+  } else {
+    res.render("/", {
+      error: error === "jwt expired" ? "Token expired" : "Invalid token",
+    });
+  }
   req.userId = payload.memberId;
   req.sessionId = payload.sessionId;
-  next();
+  // next();
 };
 
 export default authenticate;
