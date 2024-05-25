@@ -14,15 +14,7 @@ const catchErrors =
     } catch (error) {
       // pass error on
 
-      // Extract the original URL from the request (excluding query parameters)
-      const originalUrl = "." + req.originalUrl;
-
-      // res.locals.error = error;
-      res.render(originalUrl, {
-        layout: false,
-        error: error,
-      });
-      // next(error);
+      next(error);
     }
   };
 

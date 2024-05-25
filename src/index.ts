@@ -14,12 +14,14 @@ import playerRoutes from "./routes/player.route";
 import path from "path";
 import { engine } from "express-handlebars";
 import moment from "moment";
+import watchRoutes from "./routes/watch.route";
+import brandRoutes from "./routes/brand.route";
 // initialize modules and middleware
 
 const app = express();
 
 app.use(express.json());
-app.use(express.static(path.join(__dirname + "/public")));
+// app.use(express.static(path.join(__dirname + "/public")));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -37,7 +39,9 @@ app.use("/auth", authRoutes);
 app.use("/user", authenticate, userRoutes);
 app.use("/sessions", authenticate, sessionRoutes);
 app.use("/nation", nationRoutes);
-app.use("/player", playerRoutes);
+app.use("/players", playerRoutes);
+app.use("/watchs", watchRoutes);
+app.use("/brands", brandRoutes);
 
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname + "/views"));

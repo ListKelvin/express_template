@@ -1,41 +1,64 @@
 import Joi, { ValidationError } from "joi";
-import { Response, ErrorRequestHandler } from "express";
+import { Response, ErrorRequestHandler, Request } from "express";
 import AppError from "../utils/AppError";
 import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "../constant/http";
 import AppErrorCodes from "../constant/appErrorCodes";
 import { clearAuthCookies } from "../utils/cookies";
 
-const handleValidationError = (res: Response, error: ValidationError) => {
+const handleValidationError = (
+  req: Request,
+  res: Response,
+  error: ValidationError
+) => {
   const errors = error.details.map((detail) => ({
     key: detail.context?.key,
     message: detail.message,
   }));
 
-  return res.status(BAD_REQUEST).json({
+  // Extract the original URL from the request (excluding query parameters)
+  const originalUrl = "." + req.url;
+
+  // res.locals.error = error;
+  res.render(originalUrl, {
+    layout: false,
     errors,
+    error: error,
     message: error.message,
   });
+
+  // return res.status(BAD_REQUEST).json({
+  //   errors,
+  //   message: error.message,
+  // });
 };
 
-const handleAppError = (res: Response, error: AppError) => {
+const handleAppError = (req: Request, res: Response, error: AppError) => {
   if (error.errorCode === AppErrorCodes.InvalidRefreshToken) {
     clearAuthCookies(res);
   }
-  return res.status(error.statusCode).json({
+  const originalUrl = "." + req.url;
+
+  res.render(originalUrl, {
+    layout: false,
+    error: error,
     message: error.message,
     errorCode: error.errorCode,
   });
+  // return res.status(error.statusCode).json({
+  //   message: error.message,
+  //   errorCode: error.errorCode,
+  // });
 };
 
 const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
   console.log(`PATH ${req.path}`, error);
 
   if (error instanceof Joi.ValidationError) {
-    return handleValidationError(res, error);
+    return handleValidationError(req, res, error);
   }
 
   if (error instanceof AppError) {
-    return handleAppError(res, error);
+    return handleAppError(req, res, error);
   }
 
   return res.status(INTERNAL_SERVER_ERROR).send("Internal server error");

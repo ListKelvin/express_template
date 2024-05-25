@@ -15,8 +15,9 @@ const authRoutes = Router();
 
 // prefix: /auth
 
-authRoutes.route("/register").get(renderSignup).post(registerHandler);
+authRoutes.route("/signup").get(renderSignup).post(registerHandler);
 authRoutes.route("/login").get(renderLogin).post(loginHandler);
+
 authRoutes.get("/refresh", refreshHandler);
 authRoutes.get("/logout", logoutHandler);
 authRoutes.get("/email/verify/:code", verifyEmailHandler);

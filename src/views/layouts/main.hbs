@@ -17,7 +17,7 @@
     ></script>
   </head>
 
-  <body>
+  <body class="bg-teal-50 dark:bg-teal-900">
     <header
       x-data="
         {
@@ -29,7 +29,7 @@
       <div class="container mx-auto">
         <div class="relative flex items-center justify-between -mx-4">
           <div class="max-w-full px-4 w-60">
-            <a href="/" class="block w-full py-5">
+            <a class="block w-full py-5">
               Logo
             </a>
           </div>
@@ -63,7 +63,7 @@
                   <li className="mr-3 nav__item">
                     <a
                       href="/home"
-                      class="inline-block px-4 py-2 text-lg font-normal text-gray-800 no-underline rounded-md dark:text-gray-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-gray-800"
+                      class="inline-block px-4 py-2 text-lg font-normal text-teal-800 no-underline rounded-md dark:text-teal-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-teal-800"
                     >
                       Home
                     </a>
@@ -71,7 +71,7 @@
                   <li className="mr-3 nav__item">
                     <a
                       href="/watches"
-                      class="inline-block px-4 py-2 text-lg font-normal text-gray-800 no-underline rounded-md dark:text-gray-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-gray-800"
+                      class="inline-block px-4 py-2 text-lg font-normal text-teal-800 no-underline rounded-md dark:text-teal-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-teal-800"
                     >
                       All Watches
                     </a>
@@ -80,7 +80,7 @@
                     <li className="mr-3 nav__item">
                       <a
                         href="/watches/management"
-                        class="inline-block px-4 py-2 text-lg font-normal text-gray-800 no-underline rounded-md dark:text-gray-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-gray-800"
+                        class="inline-block px-4 py-2 text-lg font-normal text-teal-800 no-underline rounded-md dark:text-teal-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-teal-800"
                       >
                         Watches Management
                       </a>
@@ -95,7 +95,7 @@
                 <button
                   type="button"
                   data-dropdown-toggle="notification-dropdown"
-                  class="p-2 mr-1 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                  class="p-2 mr-1 text-teal-500 rounded-lg hover:text-teal-900 hover:bg-teal-100 dark:text-teal-400 dark:hover:text-white dark:hover:bg-teal-700 focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-600"
                 >
                   <span class="sr-only">View notifications</span>
                   <!-- Bell icon -->
@@ -115,7 +115,7 @@
                 <button
                   type="button"
                   data-dropdown-toggle="apps-dropdown"
-                  class="p-2 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                  class="p-2 text-teal-500 rounded-lg hover:text-teal-900 hover:bg-teal-100 dark:text-teal-400 dark:hover:text-white dark:hover:bg-teal-700 focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-600"
                 >
                   <span class="sr-only">View notifications</span>
                   <!-- Icon -->
@@ -133,7 +133,7 @@
                 </button>
                 <button
                   type="button"
-                  class="flex mx-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                  class="flex mx-3 text-sm bg-teal-800 rounded-full md:mr-0 focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-600"
                   id="user-menu-button"
                   aria-expanded="false"
                   data-dropdown-toggle="dropdown"
@@ -149,12 +149,12 @@
                   <button
                     type="button"
                     data-dropdown-toggle="apps-dropdown"
-                    class="p-2 text-gray-500 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:text-gray-400 dark:hover:text-white dark:hover:bg-gray-700 focus:ring-4 focus:ring-gray-300 dark:focus:ring-gray-600"
+                    class="p-2 text-teal-500 rounded-lg hover:text-teal-900 hover:bg-teal-100 dark:text-teal-400 dark:hover:text-white dark:hover:bg-teal-700 focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-600"
                   >
                     <span class="sr-only">View notifications</span>
                     <!-- Icon -->
                     <svg
-                      class="w-6 h-6 text-gray-800 dark:text-white"
+                      class="w-6 h-6 text-teal-800 dark:text-white"
                       aria-hidden="true"
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
@@ -195,19 +195,18 @@
         </div>
       </div>
     </header>
+
     {{{body}}}
-    <footer class="z-10 bg-white pt-20 pb-10 lg:pt-[120px] lg:pb-20">
+
+    <footer
+      class="z-10 bg-zinc-300 pt-20 pb-10 lg:pt-[120px] lg:pb-20 absolute bottom-0 left-0 right-0"
+    >
       <div class="container mx-auto">
         <div class="flex flex-wrap -mx-4">
           <div class="w-full px-4 sm:w-2/3 lg:w-4/12">
             <div class="w-full mb-10">
               <a href="javascript:void(0)" class="inline-block max-w-[160px]">
-                <img src="/assets/logo.png" alt="logo" class="w-24" />
-                <img
-                  src="/assets/logo.png"
-                  alt="logo"
-                  class="max-w-full hidden"
-                />
+                Logo here
               </a>
               <p class="text-base text-body-color mb-7">
                 Watches Store is your online source for the most beautiful and

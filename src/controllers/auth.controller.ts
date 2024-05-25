@@ -86,7 +86,7 @@ export const loginHandler = catchErrors(async (req, res) => {
   // set cookies
   return setAuthCookies({ res, accessToken, refreshToken })
     .status(OK)
-    .render("./home", { error: null, message: "Login successful" });
+    .render("/home", { error: null, message: "Login successful" });
 });
 
 export const logoutHandler = catchErrors(async (req, res) => {
