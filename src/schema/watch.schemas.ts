@@ -5,14 +5,14 @@ const watchSchema = Joi.string().required().min(2).max(30).messages({
 });
 const createWatchSchema = Joi.object({
   watchName: watchSchema,
-  image: optional,
+  image: Joi.string().optional(),
   price: Joi.number().required().min(1).max(10000).messages({
     "any.only": "Please enter a suitable price 1 - 10000$",
   }),
   automatic: Boolean,
   watchDescription: String,
   //   comments: Array<Comment>;
-  brand: Joi.string().required().messages({
+  brandId: Joi.string().required().messages({
     "any.only": "Please select a brand",
   }),
 });

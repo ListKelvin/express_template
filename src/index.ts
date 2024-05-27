@@ -40,7 +40,7 @@ app.use("/user", authenticate, userRoutes);
 app.use("/sessions", authenticate, sessionRoutes);
 app.use("/nation", nationRoutes);
 app.use("/players", playerRoutes);
-app.use("/watchs", watchRoutes);
+app.use("/watches", watchRoutes);
 app.use("/brands", brandRoutes);
 
 app.set("view engine", "hbs");

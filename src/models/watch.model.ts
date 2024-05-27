@@ -10,7 +10,7 @@ export interface Watch extends mongoose.Document {
   automatic: boolean;
   watchDescription: string;
   comments: Array<Comment>;
-  brand: Brand["_id"];
+  brandId: Brand["_id"];
   createdAt: Date;
   updatedAt: Date;
 }
@@ -28,7 +28,7 @@ const watchSchema = new mongoose.Schema<Watch>(
         ref: "Comment",
       },
     ],
-    brand: {
+    brandId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Brand",
       require: true,

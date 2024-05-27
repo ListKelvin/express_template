@@ -13,12 +13,17 @@ const { ValidateFailed, Unknown, NotFound } = AppErrorCodes;
 export const createWatch = async (
   data: Pick<
     Watch,
-    "watchName" | "image" | "brand" | "price" | "automatic" | "watchDescription"
+    | "watchName"
+    | "image"
+    | "brandId"
+    | "price"
+    | "automatic"
+    | "watchDescription"
   >
 ) => {
-  const existBrand = await BrandModel.findOne({ brandName: data.brand });
+  const existBrand = await BrandModel.exists({ brandName: data.brandId });
 
-  appAssert(existBrand, ValidateFailed, "Brand not exist", CONFLICT);
+  appAssert(!existBrand, ValidateFailed, "Brand not exist", CONFLICT);
 
   const watch = await WatchModel.create({
     ...data,
@@ -32,10 +37,15 @@ export const updateWatch = async (
   id: Watch["_id"],
   data: Pick<
     Watch,
-    "watchName" | "image" | "brand" | "price" | "automatic" | "watchDescription"
+    | "watchName"
+    | "image"
+    | "brandId"
+    | "price"
+    | "automatic"
+    | "watchDescription"
   >
 ) => {
-  const existBrand = await BrandModel.findOne({ brandName: data.brand });
+  const existBrand = await BrandModel.exists({ _id: data.brandId });
 
   appAssert(existBrand, ValidateFailed, "Brand not exist", CONFLICT);
 
@@ -55,9 +65,34 @@ export const updateWatch = async (
   return { watch: updateWatch };
 };
 
-export const getAllWatch = async () => {
-  const listAll = await WatchModel.find().select("watchName image brand");
-  return { watchs: listAll };
+export const getAllWatch = async (filters = {}, searchTerm = "") => {
+  // Build the query object dynamically based on filters and searchTerm
+  let query = {};
+
+  // Filter by brandId (exact match)
+  if (filters.brandId) {
+    query.brandId = filters.brandId;
+  }
+
+  // Search by watchName (case-insensitive, full-text search using regex)
+  if (searchTerm) {
+    const searchRegex = new RegExp(searchTerm, "i"); // Case-insensitive
+    query.$text = { $search: searchTerm }; // Full-text search
+  }
+
+  // Project desired fields
+  const projection = "watchName image brandId";
+
+  try {
+    const watchs = await WatchModel.find(query, projection);
+    return { watchs };
+  } catch (error) {
+    console.error("Error fetching watches:", error);
+    return { watchs: [], error }; // Handle errors gracefully
+  }
+
+  // const listAll = await WatchModel.find().select("watchName image brandId");
+  // return { watchs: listAll };
 };
 
 export const getWatchById = async (id: Watch["_id"]) => {

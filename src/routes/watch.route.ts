@@ -9,7 +9,7 @@ import {
 
 const watchRoutes = Router();
 
-//prefix: /watch
+//prefix: /watches
 
 watchRoutes.get("/", getAllWatchHandler);
 watchRoutes.get("/:id", getWatchByIdHandler);
