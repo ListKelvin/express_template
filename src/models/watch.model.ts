@@ -1,7 +1,7 @@
 import mongoose from "mongoose";
 
 import { Brand } from "./brand.model";
-import CommentModel from "./comment.model";
+import CommentModel, { commentSchema } from "./comment.model";
 
 export interface Watch extends mongoose.Document {
   watchName: string;
@@ -26,6 +26,7 @@ const watchSchema = new mongoose.Schema<Watch>(
       {
         type: mongoose.Schema.Types.ObjectId,
         ref: "Comment",
+        require: true,
       },
     ],
     brandId: {

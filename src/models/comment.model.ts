@@ -9,7 +9,7 @@ export interface Comment extends mongoose.Document {
   updatedAt: Date;
 }
 
-const commentSchema = new mongoose.Schema<Comment>(
+export const commentSchema = new mongoose.Schema<Comment>(
   {
     rating: { type: Number, min: 1, max: 3, require: true },
     content: { type: String, require: true },

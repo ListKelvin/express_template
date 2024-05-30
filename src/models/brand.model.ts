@@ -6,7 +6,7 @@ export interface Brand extends mongoose.Document {
   updatedAt: Date;
 }
 
-const brandSchema = new mongoose.Schema<Brand>(
+export const brandSchema = new mongoose.Schema<Brand>(
   {
     brandName: { type: String },
   },
