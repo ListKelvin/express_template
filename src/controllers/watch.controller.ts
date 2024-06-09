@@ -13,6 +13,7 @@ import {
   updateWatch,
 } from "../services/watch.service";
 import { createWatchSchema, updateWatchSchema } from "../schema/watch.schemas";
+import { Response } from "express";
 const { NotFound } = AppErrorCodes;
 export const createWatchHandler = catchErrors(async (req, res) => {
   const request = validateRequest(createWatchSchema, {
@@ -35,9 +36,29 @@ export const updateWatchHandler = catchErrors(async (req, res) => {
   return res.status(OK).json(watch);
 });
 
+export const renderAllWatchHandler = async (req: any, res: Response) => {
+  try {
+    const brandName = req.query.brandName;
+    const searchQuery = req.query.searchQuery;
+    const { watches } = await getAllWatch({ brandName, searchQuery });
+    return res.render("./watches/watches", {
+      watches,
+      search: searchQuery,
+      brandName: brandName,
+      // isLoggedIn: !!req.session.user,
+      // user: req.session.user,
+    });
+  } catch (err: any) {
+    res.render("404", {});
+  }
+};
+
 export const getAllWatchHandler = catchErrors(async (req, res) => {
-  const { watchs } = await getAllWatch();
-  return res.status(OK).json(watchs);
+  const brandName = req.query.brandName as string;
+  const searchQuery = req.query.searchQuery as string;
+
+  const { watches } = await getAllWatch({ brandName, searchQuery });
+  return res.status(OK).json(watches);
 });
 export const getWatchByIdHandler = catchErrors(async (req, res) => {
   const watchId = validateRequest(Joi.string().required(), req.params.id);

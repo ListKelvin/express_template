@@ -4,15 +4,17 @@ import {
   deleteWatchHandler,
   getAllWatchHandler,
   getWatchByIdHandler,
+  renderAllWatchHandler,
   updateWatchHandler,
 } from "../controllers/watch.controller";
 
 const watchRoutes = Router();
 
-//prefix: /watches
+//prefix: /watches/search
 
-watchRoutes.get("/", getAllWatchHandler);
-watchRoutes.get("/:id", getWatchByIdHandler);
+watchRoutes.route("/search").post(renderAllWatchHandler);
+
+// watchRoutes.get("/:id", getWatchByIdHandler);
 watchRoutes.put("/:id", updateWatchHandler);
 watchRoutes.post("/", createWatchHandler);
 watchRoutes.delete("/:id", deleteWatchHandler);

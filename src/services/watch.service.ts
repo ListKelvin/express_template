@@ -65,34 +65,25 @@ export const updateWatch = async (
   return { watch: updateWatch };
 };
 
-export const getAllWatch = async (filters = {}, searchTerm = "") => {
-  // Build the query object dynamically based on filters and searchTerm
-  // let query = {};
+export const getAllWatch = async (filters: {
+  brandName?: string | any;
+  searchQuery?: string | any;
+}) => {
+  const { brandName, searchQuery } = filters;
+  let query = WatchModel.find();
 
-  // // Filter by brandId (exact match)
-  // if (filters.brandId) {
-  //   query.brandId = filters.brandId;
-  // }
-
-  // // Search by watchName (case-insensitive, full-text search using regex)
-  // if (searchTerm) {
-  //   const searchRegex = new RegExp(searchTerm, "i"); // Case-insensitive
-  //   query.$text = { $search: searchTerm }; // Full-text search
-  // }
-
-  // Project desired fields
-  const projection = "watchName image brandId";
-
-  try {
-    const watchs = await WatchModel.find();
-    return { watchs };
-  } catch (error) {
-    console.error("Error fetching watches:", error);
-    return { watchs: [], error }; // Handle errors gracefully
+  if (searchQuery && brandName) {
+    query = query.find({
+      watchName: searchQuery,
+      brandId: brandName,
+    });
+  } else if (searchQuery || brandName) {
+    query = query.find({
+      $or: [{ watchName: searchQuery }, { brandId: brandName }],
+    });
   }
-
-  // const listAll = await WatchModel.find().select("watchName image brandId");
-  // return { watchs: listAll };
+  const listAll = await query.lean().select("watchName image brandId");
+  return { watches: listAll };
 };
 
 export const getWatchById = async (id: Watch["_id"]) => {

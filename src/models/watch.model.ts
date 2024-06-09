@@ -22,13 +22,7 @@ const watchSchema = new mongoose.Schema<Watch>(
     price: { type: Number, require: true },
     automatic: { type: Boolean, default: false },
     watchDescription: { type: String, require: true },
-    comments: [
-      {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: "Comment",
-        require: true,
-      },
-    ],
+    comments: [commentSchema],
     brandId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Brand",

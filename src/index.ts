@@ -16,12 +16,13 @@ import { engine } from "express-handlebars";
 import moment from "moment";
 import watchRoutes from "./routes/watch.route";
 import brandRoutes from "./routes/brand.route";
+import { renderAllWatchHandler } from "./controllers/watch.controller";
 // initialize modules and middleware
 
 const app = express();
 
 app.use(express.json());
-// app.use(express.static(path.join(__dirname + "/public")));
+app.use(express.static(path.join(__dirname + "/public")));
 
 app.use(express.urlencoded({ extended: true }));
 app.use(
@@ -30,6 +31,7 @@ app.use(
     credentials: true,
   })
 );
+
 app.use(cookieParser());
 
 // // auth routes
@@ -71,9 +73,7 @@ app.engine(
     },
   })
 );
-app.get("/", (req, res) => {
-  res.render("home");
-});
+app.get("/", renderAllWatchHandler);
 
 // error handler
 app.use(errorHandler);
