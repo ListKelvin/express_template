@@ -14,6 +14,9 @@ import {
 } from "../services/watch.service";
 import { createWatchSchema, updateWatchSchema } from "../schema/watch.schemas";
 import { Response } from "express";
+import WatchModel from "../models/watch.model";
+import { get } from "mongoose";
+import BrandModel from "../models/brand.model";
 const { NotFound } = AppErrorCodes;
 export const createWatchHandler = catchErrors(async (req, res) => {
   const request = validateRequest(createWatchSchema, {
@@ -36,11 +39,38 @@ export const updateWatchHandler = catchErrors(async (req, res) => {
   return res.status(OK).json(watch);
 });
 
+export const searchWatches = async (req: any, res: Response) => {
+  try {
+    const watches = await WatchModel.find(
+      {
+        watchName: { $regex: req.body.search, $options: "i" },
+      },
+      {},
+      {
+        populate: "brandId",
+      }
+    )
+      .lean()
+      .select("watchName image brandId price");
+    res.render("./watches/watches", {
+      watches,
+      search: req.body.search,
+      // isLoggedIn: !!req.session.user,
+      // user: req.session.user,
+    });
+  } catch (err: any) {
+    res.render("404", {
+      // isLoggedIn: !!req.session.user,
+      // user: req.session.user,
+    });
+  }
+};
 export const renderAllWatchHandler = async (req: any, res: Response) => {
   try {
     const brandName = req.query.brandName;
     const searchQuery = req.query.searchQuery;
     const { watches } = await getAllWatch({ brandName, searchQuery });
+    console.log(watches);
     return res.render("./watches/watches", {
       watches,
       search: searchQuery,
@@ -50,6 +80,78 @@ export const renderAllWatchHandler = async (req: any, res: Response) => {
     });
   } catch (err: any) {
     res.render("404", {});
+  }
+};
+
+export const renderManagementWatches = async (req: any, res: Response) => {
+  try {
+    const brands = await BrandModel.find({}).lean();
+    let watches = await WatchModel.find(
+      {},
+      {},
+      {
+        populate: "brandId",
+      }
+    ).lean();
+    // watches = watches.map((watch: any) => {
+    //   watch["brandId"] = brands;
+    //   return watch;
+    // });
+    res.render("./watches/watchManagement", {
+      watches,
+      brands,
+      // isLoggedIn: !!req.session.user,
+      // user: req.session.user,
+    });
+  } catch (err: any) {
+    res.render("404", {
+      // isLoggedIn: !!req.session.user,
+      // user: req.session.user,
+    });
+  }
+};
+
+export const renderGetWatchById = async (req: any, res: Response) => {
+  try {
+    const watch = await WatchModel.findOne(
+      { _id: req.params?.watchId },
+      {},
+      {
+        populate: ["brandId"],
+      }
+    );
+    // const comment = await CommentModel.findOne({
+    //   orchid: orchid?._id,
+    //   author: req.session.user?._id,
+    // });
+    if (!watch) {
+      res.render("404", {
+        // isLoggedIn: !!req.session.user,
+        // user: req.session.user,
+      });
+      return;
+    }
+    res.render("./watches/watchDetail", {
+      _id: watch._id,
+      name: watch.watchName,
+      price: watch.price,
+      image: watch.image,
+      description: watch.watchDescription,
+      isAutomatic: watch.automatic,
+      brandId: watch.brandId.brandName,
+
+      // comments: watch.comments?.map((comment: any) => comment.toJSON()),
+      // commentCount: watch.comments?.length,
+      // isLoggedIn: !!req.session.user,
+      // user: req.session.user,
+      // canComment: req.session.user?.role === UserRole.MEMBER && !comment,
+    });
+  } catch (err: any) {
+    console.log(err);
+    res.render("404", {
+      // isLoggedIn: !!req.session.user,
+      // user: req.session.user,
+    });
   }
 };
 

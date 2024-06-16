@@ -5,14 +5,20 @@ import {
   getAllWatchHandler,
   getWatchByIdHandler,
   renderAllWatchHandler,
+  renderGetWatchById,
+  renderManagementWatches,
+  searchWatches,
   updateWatchHandler,
 } from "../controllers/watch.controller";
 
 const watchRoutes = Router();
 
-//prefix: /watches/search
+//prefix: /watches
+watchRoutes.route("/").get(renderAllWatchHandler);
 
-watchRoutes.route("/search").post(renderAllWatchHandler);
+watchRoutes.route("/management").get(renderManagementWatches);
+watchRoutes.route("/search").post(searchWatches);
+watchRoutes.route("/:watchId").get(renderGetWatchById);
 
 // watchRoutes.get("/:id", getWatchByIdHandler);
 watchRoutes.put("/:id", updateWatchHandler);

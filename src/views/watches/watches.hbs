@@ -1,6 +1,6 @@
 <section class="bg-teal-900 pt-20 pb-10 lg:pt-[120px] lg:pb-20">
   <div class="container mx-auto pt-10">
-    <form class="max-w-md mx-auto" method="post" action="/watches/w">
+    <form class="max-w-md mx-auto" method="post" action="/watches/search">
       <label
         for="default-search"
         class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white"
@@ -47,12 +47,12 @@
               src={{this.image}}
               alt="image"
               class="w-full"
-              onError="this.onerror=null;this.src='assets/404.png';"
+              onError="this.onerror=null;this.src='/assets/404.png';"
             />
             <div class="p-2 text-center sm:p-9 md:p-7 xl:p-9">
               <h3>
                 <a
-                  href="javascript:void(0)"
+                  href="/watches/{{this._id}}"
                   class="text-dark hover:text-primary mb-4 block text-xl font-semibold sm:text-[22px] md:text-xl lg:text-[22px] xl:text-xl 2xl:text-[22px]"
                 >
                   {{this.watchName}}
@@ -60,13 +60,13 @@
               </h3>
               <p class="leading-relaxed text-xl font-bold mb-7">
                 Brand:
-                {{this.brandId}}
+                {{this.brandId.brandName}}
               </p>
               <p class="leading-relaxed text-xl font-bold mb-7">
                 ${{this.price}}
               </p>
               <a
-                href="/watches/{{this.slug}}"
+                href="/watches/{{this._id}}"
                 class="inline-block py-2 text-base font-medium transition border rounded-full text-body-color hover:border-primary hover:bg-indigo-600 border-gray-3 px-7 hover:text-white"
               >
                 View Details

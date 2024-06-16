@@ -1,5 +1,6 @@
 import mongoose from "mongoose";
 import { Member } from "./member.model";
+import { Watch } from "./watch.model";
 
 export interface Comment extends mongoose.Document {
   rating: number;
@@ -7,6 +8,7 @@ export interface Comment extends mongoose.Document {
   author: Member["_id"];
   createdAt: Date;
   updatedAt: Date;
+  watchId: Watch["_id"];
 }
 
 export const commentSchema = new mongoose.Schema<Comment>(
@@ -16,6 +18,11 @@ export const commentSchema = new mongoose.Schema<Comment>(
     author: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Member",
+      require: true,
+    },
+    watchId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Brand",
       require: true,
     },
   },

@@ -32,7 +32,6 @@ export const createWatch = async (
   return { watch: watch };
 };
 
-// update Players cần chỉnh sửa khi update nation của một player phải check player list của nation và xóa nó . cập nhật player list của nation ms
 export const updateWatch = async (
   id: Watch["_id"],
   data: Pick<
@@ -70,19 +69,32 @@ export const getAllWatch = async (filters: {
   searchQuery?: string | any;
 }) => {
   const { brandName, searchQuery } = filters;
-  let query = WatchModel.find();
+  console.log(brandName);
+
+  let query = WatchModel.find().populate("brandId");
 
   if (searchQuery && brandName) {
-    query = query.find({
-      watchName: searchQuery,
-      brandId: brandName,
-    });
+    query = query.find(
+      {
+        watchName: searchQuery,
+        brandId: brandName,
+      },
+      {
+        populate: "brandId",
+      }
+    );
   } else if (searchQuery || brandName) {
-    query = query.find({
-      $or: [{ watchName: searchQuery }, { brandId: brandName }],
-    });
+    query = query.find(
+      {
+        $or: [{ watchName: searchQuery }, { brandId: brandName }],
+      },
+      {
+        populate: "brandId",
+      }
+    );
   }
-  const listAll = await query.lean().select("watchName image brandId");
+
+  const listAll = await query.lean().select("watchName image brandId price");
   return { watches: listAll };
 };
 
