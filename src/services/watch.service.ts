@@ -69,7 +69,6 @@ export const getAllWatch = async (filters: {
   searchQuery?: string | any;
 }) => {
   const { brandName, searchQuery } = filters;
-  console.log(brandName);
 
   let query = WatchModel.find().populate("brandId");
 

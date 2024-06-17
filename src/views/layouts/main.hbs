@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Watch store</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
-    {{! <link rel="stylesheet" href="/styles/output.css" /> }}
     <script
       defer
       src="https://cdn.jsdelivr.net/npm/@imacrayon/alpine-ajax@0.4.3/dist/cdn.min.js"
@@ -76,7 +74,7 @@
                       All Watches
                     </a>
                   </li>
-                  {{#ifEquals user.role "ADMIN"}}
+                  {{#ifEquals member.role "ADMIN"}}
                     <li className="mr-3 nav__item">
                       <a
                         href="/watches/management"

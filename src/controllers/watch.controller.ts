@@ -28,7 +28,16 @@ export const createWatchHandler = catchErrors(async (req, res) => {
 
   return res.status(OK).json(watch);
 });
+export const createWatchHandlerSSR = catchErrors(async (req, res: Response) => {
+  const request = validateRequest(createWatchSchema, {
+    ...req.body,
+  });
 
+  const { watch } = await createWatch(request);
+  console.log(watch);
+
+  return res.redirect("/watches/management");
+});
 // chưa check chùng tên nation
 export const updateWatchHandler = catchErrors(async (req, res) => {
   const request = validateRequest(updateWatchSchema, {
@@ -70,7 +79,7 @@ export const renderAllWatchHandler = async (req: any, res: Response) => {
     const brandName = req.query.brandName;
     const searchQuery = req.query.searchQuery;
     const { watches } = await getAllWatch({ brandName, searchQuery });
-    console.log(watches);
+
     return res.render("./watches/watches", {
       watches,
       search: searchQuery,
@@ -97,7 +106,7 @@ export const renderManagementWatches = async (req: any, res: Response) => {
     //   watch["brandId"] = brands;
     //   return watch;
     // });
-    res.render("./watches/watchManagement", {
+    res.render("./watches/management", {
       watches,
       brands,
       // isLoggedIn: !!req.session.user,

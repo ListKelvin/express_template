@@ -1,6 +1,7 @@
 import { Router } from "express";
 import {
   createWatchHandler,
+  createWatchHandlerSSR,
   deleteWatchHandler,
   getAllWatchHandler,
   getWatchByIdHandler,
@@ -16,7 +17,11 @@ const watchRoutes = Router();
 //prefix: /watches
 watchRoutes.route("/").get(renderAllWatchHandler);
 
-watchRoutes.route("/management").get(renderManagementWatches);
+watchRoutes
+  .route("/management")
+  .get(renderManagementWatches)
+  .post(createWatchHandlerSSR);
+
 watchRoutes.route("/search").post(searchWatches);
 watchRoutes.route("/:watchId").get(renderGetWatchById);
 
