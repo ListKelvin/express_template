@@ -3,6 +3,7 @@ import {
   createWatchHandler,
   createWatchHandlerSSR,
   deleteWatchHandler,
+  deleteWatchHandlerSSR,
   getAllWatchHandler,
   getWatchByIdHandler,
   renderAllWatchHandler,
@@ -10,6 +11,7 @@ import {
   renderManagementWatches,
   searchWatches,
   updateWatchHandler,
+  updateWatchHandlerSSR,
 } from "../controllers/watch.controller";
 
 const watchRoutes = Router();
@@ -21,7 +23,10 @@ watchRoutes
   .route("/management")
   .get(renderManagementWatches)
   .post(createWatchHandlerSSR);
-
+watchRoutes
+  .route("/management/:watchId")
+  .post(updateWatchHandlerSSR)
+  .delete(deleteWatchHandlerSSR);
 watchRoutes.route("/search").post(searchWatches);
 watchRoutes.route("/:watchId").get(renderGetWatchById);
 

@@ -1,16 +1,17 @@
 <section class="pt-30 lg:pt-[120px] mb-5">
-  {{log watches}}
-  <section x-data='{createModalOpen: false}' class="pt-10">
-    <div class='container pt-20 pb-10 mx-auto flex justify-end'>
+
+  <section x-data='{createModalOpen: false}' >
+    <div class='container pb-10 pt-0 mx-auto flex justify-end'>
       <button @click='createModalOpen = true'
-        class='px-8 py-4 text-lg font-medium text-center text-white bg-indigo-600 rounded-md'>
+        class='px-8 py-4 text-lg font-medium text-center text-white bg-teal-600 rounded-md'>
         + New Watch
       </button>
     </div>
+    {{!-- Modal create watch --}}
     <div x-show='createModalOpen' x-transition
-      class='fixed top-0 left-0 flex items-center justify-center w-full h-full min-h-screen px-4 py-5 bg-slate-300 bg-opacity-80' >
+      class='fixed top-0 left-0  z-10 flex items-center justify-center w-full h-full min-h-screen px-4 py-5 bg-slate-300 bg-opacity-80' >
       <div @click.outside='createModalOpen = false'
-        class='w-full max-w-[570px] rounded-[20px] bg-white  py-12 px-8 text-center md:py-[60px] md:px-[70px]'>
+        class='w-full max-w-[570px] rounded-[20px] bg-white  py-12 px-8 text-center md:p-10'>
         <h3 class='pb-[18px] text-xl font-semibold text-dark  sm:text-2xl'>
           Create Watch
         </h3>
@@ -73,15 +74,16 @@
         </form>
       </div>
     </div>
+    {{!-- Modal create watch --}}
   </section>
-  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 ">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8  z-9">
     <div class="flex flex-col ">
       <div class="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
         <div
-          class="inline-block  min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg"
+          class=" inline-block max-h-[700px] scroll-smooth overflow-y-auto relative   min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg"
         >
-          <table class="min-w-full ">
-            <thead>
+          <table class="min-w-full relative">
+            <thead class="sticky top-0 left-0 right-0">
               <tr>
                 <th
                   class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
@@ -103,7 +105,7 @@
               </tr>
             </thead>
 
-            <tbody class="bg-white">
+            <tbody class="bg-white h-64">
               {{#each watches}}
                 <tr>
                   <td
@@ -144,22 +146,141 @@
                     class="px-6 py-4 whitespace-no-wrap border-b border-gray-200"
                   >
                  <div class='flex '>
-                    <input id="inline-checkbox" type="checkbox" {{#if this.automatic}}checked{{/if}}  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+                    <input id="inline-checkbox" type="checkbox" disabled {{#if this.automatic}}checked{{/if}}  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
                   </div>
                   </td>
 
                   <td
                     class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200"
                   >
-                    {{this.brandId.brandName}}</td>
+                    {{this.brand.brandName}}</td>
 
                   <td
                     class="px-6 py-4 text-sm  font-medium leading-5  whitespace-no-wrap border-b border-gray-200"
                   >
-                    <a
-                      href="#"
-                      class="text-indigo-600 hover:text-indigo-900 "
-                    >Edit</a>
+                    <section class='w-fit' x-data='{update{{this._id}}modalOpen: false}'>
+                      <a @click='update{{this._id}}modalOpen = true'
+                        class='cursor-pointer inline-block px-4 py-2.5 mr-2 border rounded-md hover:text-dark hover:bg-gray-100 font-medium'>
+                        Update
+                      </a>
+                          {{!-- Modal update watch --}}
+                      <div x-show='update{{this._id}}modalOpen' x-transition
+                        class='fixed z-10 top-0 left-0 flex items-center justify-center w-full h-full min-h-screen px-4 py-5 bg-slate-300 bg-opacity-80'>
+                        <div @click.outside='update{{this._id}}modalOpen = false'
+                          class='w-full max-w-[570px] rounded-[20px] bg-white py-12 px-8 text-center md:py-[60px] md:px-[70px]'>
+                          <h3 class='pb-[18px] text-xl font-semibold text-dark sm:text-2xl'>
+                            Update Watch Information
+                          </h3>
+                          <br />
+                          <form id='watch' x-init method='post' action='/watches/management/{{this._id}}'>
+
+                
+                            <div class='mb-6'>
+                              <input type='text' placeholder='Name' required name='watchName' value='{{this.watchName}}'
+                                class='border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none' />
+                            </div>
+                            <div class='mb-6'>
+                              <input type='url' placeholder='Image' required name='image' value='{{this.image}}'
+                                class='border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none' />
+                            </div>
+                            <div class='mb-6'>
+                              <input type='number' placeholder='Price' required name='price' value='{{this.price}}'
+                                class='border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none' />
+                            </div>
+                            <div class='mb-6'>
+                              <select name="brandId" required
+                                class="border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none">
+                                <option value='{{this.brand._id}}'>{{this.brand.brandName}}</option>
+                                      
+                                {{#each this.brandId}}
+                                <option value='{{this._id}}'>{{this.brandName}}</option>
+                                {{/each}}
+                              </select>
+                            </div>
+                            <div class='mb-6'>
+                                    <textarea id="watchDescription" name="watchDescription" 
+                                  class=" min-h-[100px] w-full border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none"
+                                    placeholder="Description">{{this.watchDescription}}</textarea>
+                              {{!-- <input type='text-area' placeholder='Description' required name='watchDescription'
+                                class='border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none' /> --}}
+                            </div>
+                            <div class='mb-6'>
+                              <label for='checkboxIsAutomatic' class='flex items-center cursor-pointer select-none text-dark '>
+                                <div class='relative mx-3'>
+                                  <input id="checkboxIsAutomatic" type="checkbox"  name='automatic'  {{#if this.automatic}}checked{{/if}} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+
+                                  {{!-- <input name='isAutomatic' type='checkbox' id='checkboxIsAutomatic'  class='sr-only' checked /> --}}
+                                </div>
+                                Is Automatic?
+                              </label>
+                            </div>
+
+
+                            <div class='flex flex-wrap -mx-3'>
+                              <div class='w-1/2 px-3'>
+                                <div @click='createModalOpen = false'
+                                  class='cursor-pointer block w-full p-3 text-base font-medium text-center transition border rounded-md border-stroke text-dark  hover:border-red-600 hover:bg-red-600 hover:text-white'>
+                                  Cancel
+                                </div>
+                              </div>
+                              <div class='w-1/2 px-3'>
+                                <button type='submit'
+                                  class='block w-full p-3 text-base font-medium text-center text-white transition border rounded-md border-slate-900 bg-indigo-600 hover:bg-blue-dark'>
+                                  Update
+                                </button>
+                              </div>
+                            </div>
+                          </form>
+                  
+                        </div>
+                      </div>
+                          {{!-- Modal update watch --}}
+                    </section>
+                        <section class='w-fit' x-data='{delete{{this._id}}modalOpen: false}'>
+                      <a @click='delete{{this._id}}modalOpen = true'
+                        class='cursor-pointer inline-block px-4 py-2.5 mr-2 border rounded-md hover:text-dark hover:bg-gray-100 font-medium'>
+                        Delete
+                      </a>
+                          {{!-- Modal update watch --}}
+                      <div x-show='delete{{this._id}}modalOpen' x-transition
+                        class='fixed z-10 top-0 left-0 flex items-center justify-center w-full h-full min-h-screen px-4 py-5 bg-slate-300 bg-opacity-80'>
+                        <div @click.outside='delete{{this._id}}modalOpen = false'
+                          class='w-full max-w-[570px] rounded-[20px] bg-white py-12 px-8 text-center md:py-[60px] md:px-[70px]'>
+                          <h3 class='pb-[18px] text-xl font-semibold text-dark sm:text-2xl'>
+                               Delete watch
+                          </h3>
+                          <br />
+                          <form id='delete' x-init >
+
+                                <div>
+
+                                  <p class="text-red font-bold"> Are you sure want to delete this watch</p>
+                                </div>
+
+                            <div class='flex flex-wrap -mx-3'>
+                              <div class='w-1/2 px-3'>
+                                <div @click='delete{{this._id}}modalOpen = false'
+                                  class='cursor-pointer block w-full p-3 text-base font-medium text-center transition border rounded-md border-stroke text-dark  hover:border-red-600 hover:bg-red-600 hover:text-white'>
+                                  Cancel
+                                </div>
+                              </div>
+                              <div class='w-1/2 px-3'>
+                                <button
+                                   @click="text = 'Sending Request'"
+                        
+
+                                    x-request="{route: '/watches/management/{{this._id}}', method: 'DELETE'}"
+                                  class='block w-full p-3 text-base font-medium text-center text-white transition border rounded-md border-slate-900 bg-indigo-600 hover:bg-blue-dark'>
+                                  Delete
+                                </button>
+                              </div>
+                            </div>
+                          </form>
+                  
+                        </div>
+                      </div>
+                          {{!-- Modal update watch --}}
+                    </section>
                   </td>
                 </tr>
 

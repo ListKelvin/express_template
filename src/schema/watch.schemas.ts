@@ -26,7 +26,7 @@ const updateWatchSchema = Joi.object({
   automatic: Boolean,
   watchDescription: String,
   //   comments: Array<Comment>;
-  brand: Joi.string().required().messages({
+  brandId: Joi.string().required().messages({
     "any.only": "Please select a brand",
   }),
 });

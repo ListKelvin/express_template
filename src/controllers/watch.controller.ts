@@ -34,7 +34,17 @@ export const createWatchHandlerSSR = catchErrors(async (req, res: Response) => {
   });
 
   const { watch } = await createWatch(request);
-  console.log(watch);
+
+  return res.redirect("/watches/management");
+});
+
+export const updateWatchHandlerSSR = catchErrors(async (req, res) => {
+  const request = validateRequest(updateWatchSchema, {
+    ...req.body,
+  });
+
+  const { watch } = await updateWatch(req.params.watchId, request);
+  console.log(request);
 
   return res.redirect("/watches/management");
 });
@@ -102,10 +112,11 @@ export const renderManagementWatches = async (req: any, res: Response) => {
         populate: "brandId",
       }
     ).lean();
-    // watches = watches.map((watch: any) => {
-    //   watch["brandId"] = brands;
-    //   return watch;
-    // });
+    watches = watches.map((watch: any) => {
+      watch["brand"] = watch["brandId"];
+      watch["brandId"] = brands;
+      return watch;
+    });
     res.render("./watches/management", {
       watches,
       brands,
@@ -182,4 +193,13 @@ export const deleteWatchHandler = catchErrors(async (req, res) => {
   const { watch } = await deleteWatch(watchId);
   appAssert(watch, NotFound, "Nation not found", NOT_FOUND);
   return res.status(OK).json({ watch: watch, message: "Nation removed" });
+});
+export const deleteWatchHandlerSSR = catchErrors(async (req, res) => {
+  const watchId = validateRequest(Joi.string().required(), req.params.watchId);
+  const { watch } = await deleteWatch(watchId);
+  console.log("watchId: ", watchId);
+  console.log("watch: ", watch);
+
+  appAssert(watch, NotFound, "Nation not found", NOT_FOUND);
+  return res.redirect("/watches/management");
 });
