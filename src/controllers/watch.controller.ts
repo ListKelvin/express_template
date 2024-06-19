@@ -120,12 +120,12 @@ export const renderManagementWatches = async (req: any, res: Response) => {
     res.render("./watches/management", {
       watches,
       brands,
-      // isLoggedIn: !!req.session.user,
-      // user: req.session.user,
+      isLoggedIn: !!req.cookies.accessToken,
+      member: "admin",
     });
   } catch (err: any) {
     res.render("404", {
-      // isLoggedIn: !!req.session.user,
+      isLoggedIn: !!req.cookies.accessToken,
       // user: req.session.user,
     });
   }

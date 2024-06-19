@@ -81,14 +81,16 @@ export const loginHandler = catchErrors(async (req: any, res) => {
     ...req.body,
     userAgent: req.headers["user-agent"],
   });
-  const { accessToken, refreshToken, member } = await loginUser(request);
+  const { accessToken, refreshToken, member, isValid } = await loginUser(
+    request
+  );
 
-  if (member.role === Roles.ADMIN) {
+  if (isValid && member.role === Roles.ADMIN) {
     return setAuthCookies({ res, accessToken, refreshToken }).redirect(
       "/watches/management"
     );
   }
-  if (member.role === Roles.MEMBER) {
+  if (isValid && member.role === Roles.MEMBER) {
     return setAuthCookies({ res, accessToken, refreshToken }).redirect(
       "/watches"
     );

@@ -79,7 +79,7 @@
                       All Watches
                     </a>
                   </li>
-                  {{#ifEquals member.role "ADMIN"}}
+                  {{#ifEquals member "admin"}}
                     <li className="mr-3 nav__item">
                       <a
                         href="/watches/management"
@@ -156,7 +156,7 @@
                     data-dropdown-toggle="apps-dropdown"
                     class="p-2 text-teal-500 rounded-lg hover:text-teal-900 hover:bg-teal-100 dark:text-teal-400 dark:hover:text-white dark:hover:bg-teal-700 focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-600"
                   >
-                    <span class="sr-only">View notifications</span>
+
                     <!-- Icon -->
                     <svg
                       class="w-6 h-6 text-teal-800 dark:text-white"

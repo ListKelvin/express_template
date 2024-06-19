@@ -12,8 +12,6 @@ const catchErrors =
     try {
       await controller(req, res, next);
     } catch (error) {
-      // pass error on
-
       next(error);
     }
   };

@@ -110,6 +110,7 @@ export const loginUser = async ({
   userAgent,
 }: Pick<Member, "memberName" | "password"> & { userAgent: string }) => {
   const member = await MemberModal.findOne({ memberName });
+
   appAssert(member, NotFound, "Invalid member or password", NOT_FOUND);
 
   const isValid = await member.comparePassword(password);
@@ -141,8 +142,12 @@ export const loginUser = async ({
     expiresIn: REFRESH_TOKEN_EXP,
   });
 
-  const accessToken = signToken({ ...sessionInfo, memberId });
-  return { accessToken, refreshToken, member };
+  const accessToken = signToken({
+    ...sessionInfo,
+    memberId,
+    role: member.role,
+  });
+  return { accessToken, refreshToken, member, isValid };
 };
 
 export const verifyEmail = async (code: VerificationCodeDocument["_id"]) => {

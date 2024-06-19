@@ -26,7 +26,7 @@ authRoutes
   .get(Authorization([Roles.ADMIN, Roles.MEMBER]), logoutHandlerSSR);
 
 authRoutes.get("/refresh", refreshHandler);
-authRoutes.get("/logout", logoutHandler);
+// authRoutes.get("/logout", logoutHandler);
 authRoutes.get("/email/verify/:code", verifyEmailHandler);
 authRoutes.post("/password/forgot", sendPasswordResetHandler);
 authRoutes.post("/password/reset", resetPasswordHandler);

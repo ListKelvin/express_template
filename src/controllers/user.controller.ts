@@ -2,6 +2,7 @@
 import { NotFound } from "../constant/appErrorCodes";
 import { NOT_FOUND, OK } from "../constant/http";
 import Roles from "../constant/roles";
+import MemberModal from "../models/member.model";
 import UserModel from "../models/user.model";
 import appAssert from "../utils/appAssert";
 import catchErrors from "../utils/catchErrors";
@@ -18,7 +19,7 @@ export const getAllUserHandler = catchErrors(async (req, res) => {
 
 export const getAllUserHandlerSSR = catchErrors(async (req, res) => {
   try {
-    const members = await UserModel.find(
+    const members = await MemberModal.find(
       {
         role: {
           $ne: Roles.ADMIN,
