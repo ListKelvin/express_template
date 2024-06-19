@@ -38,7 +38,7 @@ app.use(cookieParser());
 app.use("/auth", authRoutes);
 
 // // protected routes
-app.use("/user", userRoutes);
+app.use(userRoutes);
 app.use("/sessions", sessionRoutes);
 app.use("/nation", nationRoutes);
 app.use("/players", playerRoutes);
@@ -74,6 +74,9 @@ app.engine(
   })
 );
 app.get("/", renderAllWatchHandler);
+app.get("/home", (req, res) => {
+  return res.render("home");
+});
 
 // error handler
 app.use(errorHandler);

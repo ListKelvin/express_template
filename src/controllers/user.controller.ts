@@ -1,6 +1,7 @@
 // @ts-nocheck
 import { NotFound } from "../constant/appErrorCodes";
 import { NOT_FOUND, OK } from "../constant/http";
+import Roles from "../constant/roles";
 import UserModel from "../models/user.model";
 import appAssert from "../utils/appAssert";
 import catchErrors from "../utils/catchErrors";
@@ -13,4 +14,27 @@ export const getUserHandler = catchErrors(async (req, res) => {
 export const getAllUserHandler = catchErrors(async (req, res) => {
   const user = await UserModel.find();
   return res.status(OK).json(user);
+});
+
+export const getAllUserHandlerSSR = catchErrors(async (req, res) => {
+  try {
+    const members = await UserModel.find(
+      {
+        role: {
+          $ne: Roles.ADMIN,
+        },
+      },
+      "-password"
+    ).lean();
+    res.render("./users/management", {
+      members,
+      isLoggedIn: !!req.cookies.accessToken,
+      user: req.cookies.accessToken,
+    });
+  } catch (err: any) {
+    res.render("404", {
+      isLoggedIn: !!req.cookies.accessToken,
+      user: req.cookies.accessToken,
+    });
+  }
 });

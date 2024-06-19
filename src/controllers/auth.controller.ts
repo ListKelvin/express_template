@@ -69,12 +69,11 @@ export const registerHandler = catchErrors(async (req, res) => {
   });
   const { member, accessToken, refreshToken } = await createAccount(request);
 
-  return (
-    setAuthCookies({ res, accessToken, refreshToken })
-      .status(CREATED)
-      // .json(member)
-      .redirect("/auth/login")
+  return setAuthCookies({ res, accessToken, refreshToken }).redirect(
+    "/auth/login"
   );
+
+  // .json(member)
 });
 
 export const loginHandler = catchErrors(async (req: any, res) => {
@@ -85,15 +84,32 @@ export const loginHandler = catchErrors(async (req: any, res) => {
   const { accessToken, refreshToken, member } = await loginUser(request);
 
   if (member.role === Roles.ADMIN) {
-    return res.redirect("/watches/management");
+    return setAuthCookies({ res, accessToken, refreshToken }).redirect(
+      "/watches/management"
+    );
   }
   if (member.role === Roles.MEMBER) {
-    return res.redirect("/watches");
+    return setAuthCookies({ res, accessToken, refreshToken }).redirect(
+      "/watches"
+    );
   }
   // set cookies
-  return setAuthCookies({ res, accessToken, refreshToken })
-    .status(OK)
-    .render("/home", { error: null, message: "Login successful" });
+  return setAuthCookies({ res, accessToken, refreshToken }).redirect("/");
+});
+
+export const logoutHandlerSSR = catchErrors(async (req, res) => {
+  const { accessToken } = req.cookies;
+  const { payload } = verifyToken(accessToken);
+
+  if (payload) {
+    // remove session from db
+    await SessionModel.findByIdAndDelete(payload.sessionId);
+  }
+
+  // clear cookies
+  return clearAuthCookies(res).redirect("/");
+  // .status(OK)
+  // .json({ message: "Logout successful" });
 });
 
 export const logoutHandler = catchErrors(async (req, res) => {

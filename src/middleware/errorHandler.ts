@@ -63,8 +63,8 @@ const errorHandler: ErrorRequestHandler = (error, req: any, res, next) => {
 
   // return res.status(INTERNAL_SERVER_ERROR).send("Internal server error");
   return res.render("404", {
-    isLoggedIn: !!req.session.user,
-    user: req.session.user,
+    isLoggedIn: !!req.cookies.accessToken,
+    user: req.cookies.accessToken,
   });
 };
 

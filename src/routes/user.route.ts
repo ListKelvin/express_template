@@ -2,12 +2,19 @@ import { Router } from "express";
 import {
   getUserHandler,
   getAllUserHandler,
+  getAllUserHandlerSSR,
 } from "../controllers/user.controller";
+import { Authorization } from "../middleware/authorization";
+import Roles from "../constant/roles";
 
 const userRoutes = Router();
 
 // prefix: /user
-userRoutes.get("/", getAllUserHandler);
+userRoutes
+  .route("/accounts")
+  .get(Authorization([Roles.ADMIN]), getAllUserHandlerSSR);
 
-userRoutes.get("/:id", getUserHandler);
+// userRoutes.get("/", getAllUserHandler);
+
+// userRoutes.get("/:id", getUserHandler);
 export default userRoutes;
