@@ -15,7 +15,6 @@ export const loginSchema = Joi.object({
 });
 export const loginMemberSchema = Joi.object({
   memberName: memberNameSchema,
-
   password: passwordSchema,
   userAgent: Joi.string().optional(),
 });

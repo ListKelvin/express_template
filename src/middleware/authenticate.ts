@@ -1,4 +1,4 @@
-import { RequestHandler } from "express";
+import { NextFunction, RequestHandler, Response } from "express";
 import appAssert from "../utils/appAssert";
 import AppErrorCodes from "../constant/appErrorCodes";
 import { UNAUTHORIZED } from "../constant/http";
@@ -7,7 +7,7 @@ import { verifyToken } from "../utils/jwt";
 const { InvalidAccessToken } = AppErrorCodes;
 
 // wrap with catchErrors() if you need this to be async
-const authenticate: RequestHandler = (req, res, next) => {
+export const authenticate: RequestHandler = (req, res, next) => {
   const { accessToken } = req.cookies;
   appAssert(accessToken, InvalidAccessToken, "Not authorized", UNAUTHORIZED);
   if (accessToken) {
@@ -35,4 +35,11 @@ const authenticate: RequestHandler = (req, res, next) => {
   // next();
 };
 
-export default authenticate;
+export const AuthRoute = (req: any, res: Response, next: NextFunction) => {
+  // console.log(req);
+  if (!req.cookies.accessToken) {
+    next();
+  } else {
+    res.redirect("/");
+  }
+};

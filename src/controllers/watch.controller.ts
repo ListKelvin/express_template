@@ -94,7 +94,7 @@ export const renderAllWatchHandler = async (req: any, res: Response) => {
       watches,
       search: searchQuery,
       brandName: brandName,
-      // isLoggedIn: !!req.session.user,
+      isLoggedIn: !!req.cookies.accessToken,
       // user: req.session.user,
     });
   } catch (err: any) {
@@ -194,12 +194,22 @@ export const deleteWatchHandler = catchErrors(async (req, res) => {
   appAssert(watch, NotFound, "Nation not found", NOT_FOUND);
   return res.status(OK).json({ watch: watch, message: "Nation removed" });
 });
+
 export const deleteWatchHandlerSSR = catchErrors(async (req, res) => {
   const watchId = validateRequest(Joi.string().required(), req.params.watchId);
-  const { watch } = await deleteWatch(watchId);
-  console.log("watchId: ", watchId);
-  console.log("watch: ", watch);
 
-  appAssert(watch, NotFound, "Nation not found", NOT_FOUND);
-  return res.redirect("/watches/management");
+  try {
+    const { watch } = await deleteWatch(watchId);
+    if (!watch) {
+      res.status(NOT_FOUND).render("404", {
+        // isLoggedIn: !!req.session.user,
+        // user: req.session.user
+      });
+    }
+  } catch (err: any) {
+    res.render("404", {
+      // isLoggedIn: !!req.session.user,
+      // user: req.session.user
+    });
+  }
 });

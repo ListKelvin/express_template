@@ -10,13 +10,14 @@ import {
   renderSignup,
   renderLogin,
 } from "../controllers/auth.controller";
+import { AuthRoute } from "../middleware/authenticate";
 
 const authRoutes = Router();
 
 // prefix: /auth
 
-authRoutes.route("/signup").get(renderSignup).post(registerHandler);
-authRoutes.route("/login").get(renderLogin).post(loginHandler);
+authRoutes.route("/signup").get(AuthRoute, renderSignup).post(registerHandler);
+authRoutes.route("/login").get(AuthRoute, renderLogin).post(loginHandler);
 
 authRoutes.get("/refresh", refreshHandler);
 authRoutes.get("/logout", logoutHandler);

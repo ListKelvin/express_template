@@ -9,14 +9,14 @@ export const Authorization = (roles: Roles[]) => {
         next();
       } else {
         res.render("404", {
-          isLoggedIn: !!req.sessionId,
-          user: req.sessionId,
+          isLoggedIn: !!req.session.user,
+          user: req.session.user,
         });
       }
     } else {
       res.render("404", {
-        isLoggedIn: !!req.sessionId,
-        user: req.sessionId,
+        isLoggedIn: !!req.session.user,
+        user: req.session.user,
       });
     }
   };

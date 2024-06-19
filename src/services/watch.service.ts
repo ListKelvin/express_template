@@ -103,7 +103,7 @@ export const getWatchById = async (id: Watch["_id"]) => {
 };
 
 export const deleteWatch = async (id: Watch["_id"]) => {
-  const watch = await WatchModel.findByIdAndDelete(id);
+  const watch = await WatchModel.findByIdAndDelete(id).lean().exec();
   appAssert(watch, NotFound, "Watch is not found", NOT_FOUND);
   return { watch };
 };

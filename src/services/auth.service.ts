@@ -142,7 +142,7 @@ export const loginUser = async ({
   });
 
   const accessToken = signToken({ ...sessionInfo, memberId });
-  return { accessToken, refreshToken };
+  return { accessToken, refreshToken, member };
 };
 
 export const verifyEmail = async (code: VerificationCodeDocument["_id"]) => {

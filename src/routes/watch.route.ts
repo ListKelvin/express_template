@@ -13,6 +13,8 @@ import {
   updateWatchHandler,
   updateWatchHandlerSSR,
 } from "../controllers/watch.controller";
+import Roles from "../constant/roles";
+import { Authorization } from "../middleware/authorization";
 
 const watchRoutes = Router();
 
@@ -21,12 +23,13 @@ watchRoutes.route("/").get(renderAllWatchHandler);
 
 watchRoutes
   .route("/management")
-  .get(renderManagementWatches)
-  .post(createWatchHandlerSSR);
+  .get(Authorization([Roles.ADMIN]), renderManagementWatches)
+  .post(Authorization([Roles.ADMIN]), createWatchHandlerSSR);
 watchRoutes
   .route("/management/:watchId")
-  .post(updateWatchHandlerSSR)
-  .delete(deleteWatchHandlerSSR);
+  .post(Authorization([Roles.ADMIN]), updateWatchHandlerSSR)
+  .delete(Authorization([Roles.ADMIN]), deleteWatchHandlerSSR);
+
 watchRoutes.route("/search").post(searchWatches);
 watchRoutes.route("/:watchId").get(renderGetWatchById);
 

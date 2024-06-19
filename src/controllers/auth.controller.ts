@@ -28,7 +28,8 @@ import {
 } from "../schema/auth.schemas";
 import VerificationCodeTypes from "../constant/verificationCodeTypes";
 import VerificationCodeModel from "../models/verificationCode.model";
-import { Response } from "express";
+import { NextFunction, Response } from "express";
+import Roles from "../constant/roles";
 
 const { InvalidRefreshToken, NotFound } = AppErrorCodes;
 
@@ -76,13 +77,19 @@ export const registerHandler = catchErrors(async (req, res) => {
   );
 });
 
-export const loginHandler = catchErrors(async (req, res) => {
+export const loginHandler = catchErrors(async (req: any, res) => {
   const request = validateRequest(loginMemberSchema, {
     ...req.body,
     userAgent: req.headers["user-agent"],
   });
-  const { accessToken, refreshToken } = await loginUser(request);
+  const { accessToken, refreshToken, member } = await loginUser(request);
 
+  if (member.role === Roles.ADMIN) {
+    return res.redirect("/watches/management");
+  }
+  if (member.role === Roles.MEMBER) {
+    return res.redirect("/watches");
+  }
   // set cookies
   return setAuthCookies({ res, accessToken, refreshToken })
     .status(OK)
@@ -154,3 +161,7 @@ export const resetPasswordHandler = catchErrors(async (req, res) => {
     .status(OK)
     .json({ message: "Password was reset successfully" });
 });
+export const logout = async (req: Request, res: Response) => {
+  clearAuthCookies(res);
+  res.redirect("/");
+};

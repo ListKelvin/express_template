@@ -235,8 +235,15 @@
                         </div>
                       </div>
                           {{!-- Modal update watch --}}
+
+
+
+
                     </section>
-                         <section class='w-fit' x-data='{delete{{this._id}}modalOpen: false}'>
+
+{{!-- modal delete here --}}
+
+                        <section class='w-fit' x-data='{delete{{this._id}}modalOpen: false}'>
                       <a @click='delete{{this._id}}modalOpen = true'
                         class='cursor-pointer inline-block px-4 py-2.5 mr-2 border rounded-md hover:text-dark hover:bg-gray-100 font-medium'>
                         Delete
@@ -259,7 +266,7 @@
                             </button>
                           </div>
                           <div class='w-1/2 px-3'>
-                            <form method='delete' id='delete' action='/watches/management/{{this._id}}' x-target='watch'>
+                            <form method='delete' id='delete' action='/watches/management/{{ this._id }}' x-target='watch'>
                               <button @click='location.reload()'
                                 class='block w-full p-3 text-base font-medium text-center text-white transition border rounded-md border-primary text-dark bg-indigo-600 hover:bg-blue-dark'>
                                 Yes, I'm sure
@@ -270,7 +277,7 @@
                   
                         </div>
                       </div>
-                  {{!-- Modal update watch --}}
+                          {{!-- Modal update watch --}}
                     </section>
                   </td>
                 </tr>

@@ -50,7 +50,7 @@ const handleAppError = (req: Request, res: Response, error: AppError) => {
   // });
 };
 
-const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
+const errorHandler: ErrorRequestHandler = (error, req: any, res, next) => {
   console.log(`PATH ${req.path}`, error);
 
   if (error instanceof Joi.ValidationError) {
@@ -61,7 +61,11 @@ const errorHandler: ErrorRequestHandler = (error, req, res, next) => {
     return handleAppError(req, res, error);
   }
 
-  return res.status(INTERNAL_SERVER_ERROR).send("Internal server error");
+  // return res.status(INTERNAL_SERVER_ERROR).send("Internal server error");
+  return res.render("404", {
+    isLoggedIn: !!req.session.user,
+    user: req.session.user,
+  });
 };
 
 export default errorHandler;
