@@ -1,5 +1,4 @@
 <section class="pt-30 lg:pt-[120px] mb-5">
-
   <section x-data='{createModalOpen: false}' >
     <div class='container pb-10 pt-0 mx-auto flex justify-end'>
       <button @click='createModalOpen = true'
@@ -13,47 +12,13 @@
       <div @click.outside='createModalOpen = false'
         class='w-full max-w-[570px] rounded-[20px] bg-white  py-12 px-8 text-center md:p-10'>
         <h3 class='pb-[18px] text-xl font-semibold text-dark  sm:text-2xl'>
-          Create Watch
+          Create Brands
         </h3>
         <br />
-        <form id='create' x-init method='POST' action='/watches/management'>
+        <form id='create' x-init method='POST' action='/brands/management'>
           <div class='mb-6'>
-            <input type='text' placeholder='Name' required name='watchName'
+            <input type='text' placeholder='Brand Name' required name='brandName'
               class='border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none' />
-          </div>
-          <div class='mb-6'>
-            <input type='url' placeholder='Image' required name='image'
-              class='border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none' />
-          </div>
-          <div class='mb-6'>
-            <input type='number' placeholder='Price' required name='price'
-              class='border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none' />
-          </div>
-          <div class='mb-6'>
-            <select name="brandId" required
-              class="border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none">
-              <option value="" selected>Choose a brand</option>
-              {{#each brands}}
-              <option value={{this._id}}>{{this.brandName}}</option>
-              {{/each}}
-            </select>
-          </div>
-          <div class='mb-6'>
-                  <textarea id="watchDescription" name="watchDescription"
-      class=" min-h-[100px] w-full border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none"
-      placeholder="Description"></textarea>
-            {{!-- <input type='text-area' placeholder='Description' required name='watchDescription'
-              class='border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none' /> --}}
-          </div>
-          <div class='mb-6'>
-            <label for='checkboxIsAutomatic' class='flex items-center cursor-pointer select-none text-dark '>
-              <div class='relative mx-3'>
-                <input id="checkboxIsAutomatic" type="checkbox"  name='automatic' class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-
-                {{!-- <input name='isAutomatic' type='checkbox' id='checkboxIsAutomatic'  class='sr-only' checked /> --}}
-              </div>
-              Is Automatic?
-            </label>
           </div>
 
 
@@ -88,73 +53,38 @@
                 <th
                   class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
                 >
-                  Name</th>
+                  ID</th>
                 <th
                   class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
                 >
-                  Price</th>
+                  Brand Name</th>
                 <th
                   class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
                 >
-                  Automatic</th>
-                <th
-                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
-                >
-                  Brand</th>
+                  Created At</th>
+          
                 <th class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50">Actions
               </tr>
             </thead>
-
             <tbody class="bg-white h-64">
-              {{#each watches}}
+              {{#each brands}}
                 <tr>
-                  <td
-                    class="px-6 py-4 whitespace-no-wrap border-b border-gray-200"
+                 <td
+                    class="text-dark border-b border-l border-[#E8E8E8] bg-white py-5 px-5 text-center text-base font-medium"
                   >
-                    <div class="flex items-center">
-                      <div class="flex-shrink-0 w-10 h-10">
-                        <img
-                          class="w-10 h-10 rounded-full"
-                          {{!-- src={{this.image}} --}}
-                                  src={{this.image}}
-                             alt="image"
-                          onError="this.onerror=null;this.src='/assets/404.png';"
-                        />
-                      </div>
-
-                      <div class="ml-4">
-                        <div
-                          class="text-sm font-medium leading-5 text-gray-900"
-                        >
-                          {{this.watchName}}
-                        </div>
-
-                      </div>
-                    </div>
+                    {{inc @index}}
                   </td>
-
-                  <td
-                    class="px-6 py-4 whitespace-no-wrap border-b border-gray-200"
-                  >
-                    <div
-                      class="text-sm leading-5 text-gray-900"
-                    >${{this.price}}</div>
-
-                  </td>
-
-                  <td
-                    class="px-6 py-4 whitespace-no-wrap border-b border-gray-200"
-                  >
-                 <div class='flex '>
-                    <input id="inline-checkbox" type="checkbox" disabled {{#if this.automatic}}checked{{/if}}  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-                  </div>
-                  </td>
-
                   <td
                     class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200"
                   >
-                    {{this.brand.brandName}}</td>
-
+                    {{this.brandName}}
+                    
+                  </td>
+                   <td
+                    class="text-dark border-b border-[#E8E8E8] bg-white py-5 px-5 text-center text-base font-medium"
+                  >
+                    {{prettifyDate this.createdAt}}
+                  </td>
                   <td
                     class="px-6 py-4 text-sm  font-medium leading-5  whitespace-no-wrap border-b border-gray-200"
                   >
@@ -169,53 +99,15 @@
                         <div @click.outside='update{{this._id}}modalOpen = false'
                           class='w-full max-w-[570px] rounded-[20px] bg-white py-12 px-8 text-center md:py-[60px] md:px-[70px]'>
                           <h3 class='pb-[18px] text-xl font-semibold text-dark sm:text-2xl'>
-                            Update Watch Information
+                            Update Brands
                           </h3>
                           <br />
                           <form id='watch' x-init method='post' action='/watches/management/{{this._id}}'>
-
                 
                             <div class='mb-6'>
-                              <input type='text' placeholder='Name' required name='watchName' value='{{this.watchName}}'
+                              <input type='text' placeholder='Brand Name' required name='brandName' value='{{this.brandName}}'
                                 class='border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none' />
                             </div>
-                            <div class='mb-6'>
-                              <input type='url' placeholder='Image' required name='image' value='{{this.image}}'
-                                class='border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none' />
-                            </div>
-                            <div class='mb-6'>
-                              <input type='number' placeholder='Price' required name='price' value='{{this.price}}'
-                                class='border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none' />
-                            </div>
-                            <div class='mb-6'>
-                              <select name="brandId" required
-                                class="border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none">
-                                <option value='{{this.brand._id}}'>{{this.brand.brandName}}</option>
-                                      
-                                {{#each this.brandId}}
-                                <option value='{{this._id}}'>{{this.brandName}}</option>
-                                {{/each}}
-                              </select>
-                            </div>
-                            <div class='mb-6'>
-                                    <textarea id="watchDescription" name="watchDescription" 
-                                  class=" min-h-[100px] w-full border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none"
-                                    placeholder="Description">{{this.watchDescription}}</textarea>
-                              {{!-- <input type='text-area' placeholder='Description' required name='watchDescription'
-                                class='border-stroke text-body-color focus:border-slate-900 w-full rounded border py-3 px-[14px] text-base outline-none' /> --}}
-                            </div>
-                            <div class='mb-6'>
-                              <label for='checkboxIsAutomatic' class='flex items-center cursor-pointer select-none text-dark '>
-                                <div class='relative mx-3'>
-                                  <input id="checkboxIsAutomatic" type="checkbox"  name='automatic'  {{#if this.automatic}}checked{{/if}} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
-
-                                  {{!-- <input name='isAutomatic' type='checkbox' id='checkboxIsAutomatic'  class='sr-only' checked /> --}}
-                                </div>
-                                Is Automatic?
-                              </label>
-                            </div>
-
-
                             <div class='flex flex-wrap -mx-3'>
                               <div class='w-1/2 px-3'>
                                 <div @click='createModalOpen = false'
@@ -235,15 +127,9 @@
                         </div>
                       </div>
                           {{!-- Modal update watch --}}
-
-
-
-
                     </section>
-
-{{!-- modal delete here --}}
-
-                        <section class='w-fit' x-data='{delete{{this._id}}modalOpen: false}'>
+                  {{!-- modal delete here --}}
+                    <section class='w-fit' x-data='{delete{{this._id}}modalOpen: false}'>
                       <a @click='delete{{this._id}}modalOpen = true'
                         class='cursor-pointer inline-block px-4 py-2.5 mr-2 border rounded-md hover:text-dark hover:bg-gray-100 font-medium'>
                         Delete
@@ -274,14 +160,12 @@
                             </form>
                           </div>
                         </div>
-                  
                         </div>
                       </div>
                           {{!-- Modal update watch --}}
                     </section>
                   </td>
                 </tr>
-
               {{/each}}
             </tbody>
           </table>

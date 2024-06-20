@@ -23,7 +23,14 @@ export const createBrandHandler = catchErrors(async (req, res) => {
   const { brand } = await createBrand(request);
   return res.status(OK).json(brand);
 });
+export const createBrandHandlerSSR = catchErrors(async (req, res) => {
+  const request = validateRequest(createBrandSchema, {
+    ...req.body,
+  });
 
+  const { brand } = await createBrand(request);
+  return res.redirect("/brands/management");
+});
 // chưa check chùng tên Brand
 export const updateBrandHandler = catchErrors(async (req, res) => {
   const request = validateRequest(updateBrandSchema, {
@@ -34,6 +41,19 @@ export const updateBrandHandler = catchErrors(async (req, res) => {
   return res.status(OK).json(brand);
 });
 
+export const updateBrandHandlerSSR = catchErrors(async (req, res) => {
+  const request = validateRequest(updateBrandSchema, {
+    ...req.body,
+  });
+
+  const { brand } = await updateBrand(req.params.id, request);
+  return res.redirect("/brands/management");
+});
+
+export const renderAllBrandHandler = catchErrors(async (req, res) => {
+  const { brands } = await getAllBrand();
+  return res.render("./brands/brandManagement", { brands });
+});
 export const getAllBrandHandler = catchErrors(async (req, res) => {
   const { brands } = await getAllBrand();
   return res.status(OK).json(brands);
@@ -49,4 +69,21 @@ export const deleteBrandHandler = catchErrors(async (req, res) => {
   const { brand } = await deleteBrand(brandId);
   appAssert(brand, NotFound, "Brand not found", NOT_FOUND);
   return res.status(OK).json({ brand: brand, message: "Brand removed" });
+});
+export const deleteBrandHandlerSSR = catchErrors(async (req, res) => {
+  const brandId = validateRequest(Joi.string().required(), req.params.id);
+  try {
+    const { brand } = await deleteBrand(brandId);
+    if (!brand) {
+      res.status(NOT_FOUND).render("404", {
+        isLoggedIn: !!req.cookies.accessToken,
+        // user: req.session.user
+      });
+    }
+  } catch (err: any) {
+    res.render("404", {
+      isLoggedIn: !!req.cookies.accessToken,
+      // user: req.session.user
+    });
+  }
 });
