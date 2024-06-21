@@ -42,3 +42,19 @@ export const getAllUserHandlerSSR = catchErrors(async (req, res) => {
     });
   }
 });
+export const getUserHandlerSSR = catchErrors(async (req, res) => {
+  const { payload } = verifyToken(req.cookies.accessToken);
+  const profile = await MemberModal.findOne({ _id: payload?.memberId }).lean();
+  try {
+    res.render("./members/profile", {
+      profile,
+      isLoggedIn: !!req.cookies.accessToken,
+      member: profile?.role,
+    });
+  } catch (err: any) {
+    res.render("404", {
+      isLoggedIn: !!req.cookies.accessToken,
+      member: profile?.role,
+    });
+  }
+});

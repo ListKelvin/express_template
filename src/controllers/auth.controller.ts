@@ -2,6 +2,7 @@ import AppErrorCodes from "../constant/appErrorCodes";
 import { CREATED, NOT_FOUND, OK, UNAUTHORIZED } from "../constant/http";
 import SessionModel from "../models/session.model";
 import {
+  changePasswordService,
   createAccount,
   loginUser,
   refreshUserAccessToken,
@@ -19,6 +20,7 @@ import { verifyToken } from "../utils/jwt";
 import catchErrors from "../utils/catchErrors";
 import validateRequest from "../utils/validateRequest";
 import {
+  changePasswordMemberSchema,
   emailSchema,
   loginMemberSchema,
   loginSchema,
@@ -30,6 +32,7 @@ import VerificationCodeTypes from "../constant/verificationCodeTypes";
 import VerificationCodeModel from "../models/verificationCode.model";
 import { NextFunction, Response } from "express";
 import Roles from "../constant/roles";
+import MemberModal from "../models/member.model";
 
 const { InvalidRefreshToken, NotFound } = AppErrorCodes;
 
@@ -61,6 +64,21 @@ export const renderSignup = (req: any, res: Response) => {
     });
   }
 };
+export const renderChangePasswordHandler = async (req: any, res: Response) => {
+  const { payload } = verifyToken(req.cookies.accessToken);
+  const member = await MemberModal.findOne({ _id: payload?.memberId });
+  try {
+    res.render("./members/changePassword", {
+      isLoggedIn: !!req.cookies.accessToken,
+      member: member?.role,
+    });
+  } catch (err: any) {
+    res.render("404", {
+      isLoggedIn: !!req.cookies.accessToken,
+      member: member?.role,
+    });
+  }
+};
 
 export const registerHandler = catchErrors(async (req, res) => {
   const request = validateRequest(registerMemberSchema, {
@@ -72,6 +90,18 @@ export const registerHandler = catchErrors(async (req, res) => {
   return setAuthCookies({ res, accessToken, refreshToken }).redirect(
     "/auth/login"
   );
+
+  // .json(member)
+});
+export const changePasswordHandlerSSR = catchErrors(async (req, res) => {
+  const request = validateRequest(changePasswordMemberSchema, {
+    ...req.body,
+  });
+
+  const { newMem } = await changePasswordService(request);
+  console.log(newMem);
+
+  return clearAuthCookies(res).redirect("/login");
 
   // .json(member)
 });

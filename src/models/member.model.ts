@@ -11,12 +11,17 @@ export interface Member extends mongoose.Document {
   createdAt: Date;
   updatedAt: Date;
   isAdmin: boolean;
+  phone: string;
+  avatar: string;
+  YOB: string;
   comparePassword(val: string): Promise<boolean>;
   omitPassword(): Pick<
     Member,
     | "_id"
     | "email"
     | "memberName"
+    | "phone"
+    | "YOB"
     | "verified"
     | "createdAt"
     | "updatedAt"
@@ -27,11 +32,14 @@ export interface Member extends mongoose.Document {
 const memberSchema = new mongoose.Schema<Member>(
   {
     email: { type: String, required: true, unique: true },
+    avatar: { type: String, required: false },
     memberName: { type: String, required: true },
     password: { type: String, required: true },
     role: { type: String, enum: Roles, default: Roles.MEMBER },
     verified: { type: Boolean, required: true, default: false },
     isAdmin: { type: Boolean, default: false },
+    phone: { type: String, required: false },
+    YOB: { type: String, required: true, unique: true },
   },
   {
     timestamps: true,

@@ -1,6 +1,7 @@
 import AppErrorCodes from "../constant/appErrorCodes";
 import { APP_ORIGIN, JWT_REFRESH_SECRET } from "../constant/env";
 import {
+  BAD_REQUEST,
   CONFLICT,
   INTERNAL_SERVER_ERROR,
   NOT_FOUND,
@@ -24,6 +25,7 @@ import {
   getVerifyEmailTemplate,
 } from "../utils/emailTemplates";
 import {
+  AccessToken,
   REFRESH_TOKEN_EXP,
   RefreshToken,
   signToken,
@@ -38,6 +40,7 @@ const {
   NotFound,
   Unknown,
   RateLimitExceeded,
+  ValidateFailed,
 } = AppErrorCodes;
 
 export const createAccount = async (
@@ -148,6 +151,41 @@ export const loginUser = async ({
     role: member.role,
   });
   return { accessToken, refreshToken, member, isValid };
+};
+
+export const changePasswordService = async ({
+  oldPassword,
+  newPassword,
+  payload,
+}: {
+  oldPassword: string;
+  newPassword: string;
+  payload: AccessToken;
+}) => {
+  const member = await MemberModal.findOne({ _id: payload?.memberId });
+
+  appAssert(member, NotFound, "Invalid member or password", NOT_FOUND);
+
+  appAssert(
+    newPassword.includes(oldPassword),
+    ValidateFailed,
+    "New password must not match with the previous passwords.",
+    BAD_REQUEST
+  );
+
+  const isValid = await member.comparePassword(oldPassword);
+  appAssert(
+    isValid,
+    InvalidCredentials,
+    "Invalid member name or password",
+    UNAUTHORIZED
+  );
+
+  const newMem = await MemberModal.updateOne(
+    { _id: member._id },
+    { $set: { password: newPassword } }
+  );
+  return { newMem };
 };
 
 export const verifyEmail = async (code: VerificationCodeDocument["_id"]) => {

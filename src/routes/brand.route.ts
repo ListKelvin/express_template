@@ -10,19 +10,21 @@ import {
   updateBrandHandler,
   updateBrandHandlerSSR,
 } from "../controllers/brand.controller";
+import { Authorization } from "../middleware/authorization";
+import Roles from "../constant/roles";
 
 const brandRoutes = Router();
 
 //prefix: /brands
 brandRoutes
   .route("/management")
-  .get(renderAllBrandHandler)
-  .post(createBrandHandlerSSR);
+  .get(Authorization([Roles.ADMIN]), renderAllBrandHandler)
+  .post(Authorization([Roles.ADMIN]), createBrandHandlerSSR);
 
 brandRoutes
   .route("/management/:id")
-  .post(updateBrandHandlerSSR)
-  .delete(deleteBrandHandlerSSR);
+  .post(Authorization([Roles.ADMIN]), updateBrandHandlerSSR)
+  .delete(Authorization([Roles.ADMIN]), deleteBrandHandlerSSR);
 
 brandRoutes.get("/", getAllBrandHandler);
 brandRoutes.get("/:id", getBrandByIdHandler);
