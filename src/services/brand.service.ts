@@ -29,10 +29,10 @@ export const updateBrand = async (
   id: Brand["_id"],
   data: Pick<Brand, "brandName">
 ) => {
-  const brandId = await BrandModel.findById(id);
+  const brandId = await BrandModel.findById(id).lean();
   appAssert(brandId, NotFound, "brand is not found", NOT_FOUND);
 
-  const updateBrand = await BrandModel.findByIdAndUpdate(brandId.id, data, {
+  const updateBrand = await BrandModel.findByIdAndUpdate(brandId._id, data, {
     new: true,
   });
   appAssert(
@@ -45,7 +45,7 @@ export const updateBrand = async (
 };
 
 export const getAllBrand = async () => {
-  const listAll = await BrandModel.find();
+  const listAll = await BrandModel.find().lean();
   return { brands: listAll };
 };
 

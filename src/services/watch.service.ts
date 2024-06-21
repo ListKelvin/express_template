@@ -70,13 +70,14 @@ export const getAllWatch = async (filters: {
 }) => {
   const { brandName, searchQuery } = filters;
 
-  let query = WatchModel.find().populate("brandId");
+  let query = WatchModel.find({ automatic: true }).populate("brandId");
 
   if (searchQuery && brandName) {
     query = query.find(
       {
         watchName: searchQuery,
         brandId: brandName,
+        automatic: true,
       },
       {
         populate: "brandId",

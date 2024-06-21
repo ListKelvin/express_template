@@ -6,6 +6,7 @@ import MemberModal from "../models/member.model";
 import UserModel from "../models/user.model";
 import appAssert from "../utils/appAssert";
 import catchErrors from "../utils/catchErrors";
+import { verifyToken } from "../utils/jwt";
 
 export const getUserHandler = catchErrors(async (req, res) => {
   const user = await UserModel.findById(req.params.id);
@@ -18,6 +19,8 @@ export const getAllUserHandler = catchErrors(async (req, res) => {
 });
 
 export const getAllUserHandlerSSR = catchErrors(async (req, res) => {
+  const { payload } = verifyToken(req.cookies.accessToken);
+  const memberToken = await MemberModal.findOne({ _id: payload?.memberId });
   try {
     const members = await MemberModal.find(
       {
@@ -27,15 +30,15 @@ export const getAllUserHandlerSSR = catchErrors(async (req, res) => {
       },
       "-password"
     ).lean();
-    res.render("./users/management", {
+    res.render("./members/management", {
       members,
       isLoggedIn: !!req.cookies.accessToken,
-      user: req.cookies.accessToken,
+      member: memberToken?.role,
     });
   } catch (err: any) {
     res.render("404", {
       isLoggedIn: !!req.cookies.accessToken,
-      user: req.cookies.accessToken,
+      member: memberToken?.role,
     });
   }
 });

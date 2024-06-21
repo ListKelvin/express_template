@@ -13,6 +13,8 @@ import validateRequest from "../utils/validateRequest";
 import appAssert from "../utils/appAssert";
 import AppErrorCodes from "../constant/appErrorCodes";
 import { createBrandSchema, updateBrandSchema } from "../schema/brand.schema";
+import { verifyToken } from "../utils/jwt";
+import MemberModal from "../models/member.model";
 const { NotFound } = AppErrorCodes;
 export const createBrandHandler = catchErrors(async (req, res) => {
   const request = validateRequest(createBrandSchema, {
@@ -52,7 +54,13 @@ export const updateBrandHandlerSSR = catchErrors(async (req, res) => {
 
 export const renderAllBrandHandler = catchErrors(async (req, res) => {
   const { brands } = await getAllBrand();
-  return res.render("./brands/brandManagement", { brands });
+  const { payload } = verifyToken(req.cookies.accessToken);
+  const member = await MemberModal.findOne({ _id: payload?.memberId });
+  return res.render("./brands/brandManagement", {
+    brands,
+    isLoggedIn: !!req.cookies.accessToken,
+    member: member?.role,
+  });
 });
 export const getAllBrandHandler = catchErrors(async (req, res) => {
   const { brands } = await getAllBrand();

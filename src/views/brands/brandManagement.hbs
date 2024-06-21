@@ -3,10 +3,10 @@
     <div class='container pb-10 pt-0 mx-auto flex justify-end'>
       <button @click='createModalOpen = true'
         class='px-8 py-4 text-lg font-medium text-center text-white bg-teal-600 rounded-md'>
-        + New Watch
+        + New Brand
       </button>
     </div>
-    {{!-- Modal create watch --}}
+    {{!-- Modal create brand --}}
     <div x-show='createModalOpen' x-transition
       class='fixed top-0 left-0  z-10 flex items-center justify-center w-full h-full min-h-screen px-4 py-5 bg-slate-300 bg-opacity-80' >
       <div @click.outside='createModalOpen = false'
@@ -39,7 +39,7 @@
         </form>
       </div>
     </div>
-    {{!-- Modal create watch --}}
+    {{!-- Modal create brand --}}
   </section>
   <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8  z-9">
     <div class="flex flex-col ">
@@ -70,7 +70,7 @@
               {{#each brands}}
                 <tr>
                  <td
-                    class="text-dark border-b border-l border-[#E8E8E8] bg-white py-5 px-5 text-center text-base font-medium"
+                    class="text-dark border-b border-l border-[#E8E8E8] bg-white py-5 px-5  text-base font-medium"
                   >
                     {{inc @index}}
                   </td>
@@ -81,7 +81,7 @@
                     
                   </td>
                    <td
-                    class="text-dark border-b border-[#E8E8E8] bg-white py-5 px-5 text-center text-base font-medium"
+                    class="text-dark border-b border-[#E8E8E8] bg-white text-base font-medium"
                   >
                     {{prettifyDate this.createdAt}}
                   </td>
@@ -102,7 +102,7 @@
                             Update Brands
                           </h3>
                           <br />
-                          <form id='watch' x-init method='post' action='/watches/management/{{this._id}}'>
+                          <form id='watch' x-init method='post' action='/brands/management/{{this._id}}'>
                 
                             <div class='mb-6'>
                               <input type='text' placeholder='Brand Name' required name='brandName' value='{{this.brandName}}'
@@ -152,7 +152,7 @@
                             </button>
                           </div>
                           <div class='w-1/2 px-3'>
-                            <form method='delete' id='delete' action='/watches/management/{{ this._id }}' x-target='watch'>
+                            <form method='delete' id='delete' action='/brands/management/{{ this._id }}' x-target='watch'>
                               <button @click='location.reload()'
                                 class='block w-full p-3 text-base font-medium text-center text-white transition border rounded-md border-primary text-dark bg-indigo-600 hover:bg-blue-dark'>
                                 Yes, I'm sure

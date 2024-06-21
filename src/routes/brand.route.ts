@@ -21,8 +21,8 @@ brandRoutes
 
 brandRoutes
   .route("/management/:id")
-  .delete(deleteBrandHandlerSSR)
-  .put(updateBrandHandlerSSR);
+  .post(updateBrandHandlerSSR)
+  .delete(deleteBrandHandlerSSR);
 
 brandRoutes.get("/", getAllBrandHandler);
 brandRoutes.get("/:id", getBrandByIdHandler);

@@ -88,6 +88,22 @@
                         Watches Management
                       </a>
                     </li>
+                    <li className="mr-3 nav__item">
+                      <a
+                        href="/brands/management"
+                        class="inline-block px-4 py-2 text-lg font-normal text-teal-800 no-underline rounded-md dark:text-teal-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-teal-800"
+                      >
+                        Brands Management
+                      </a>
+                    </li>
+                    <li className="mr-3 nav__item">
+                      <a
+                        href="/accounts"
+                        class="inline-block px-4 py-2 text-lg font-normal text-teal-800 no-underline rounded-md dark:text-teal-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-teal-800"
+                      >
+                        Accounts Management
+                      </a>
+                    </li>
                   {{/ifEquals}}
                 </ul>
               </nav>
@@ -116,25 +132,50 @@
                   </svg>
                 </button>
                 <!-- Apps -->
-                <button
-                  type="button"
-                  data-dropdown-toggle="apps-dropdown"
-                  class="p-2 text-teal-500 rounded-lg hover:text-teal-900 hover:bg-teal-100 dark:text-teal-400 dark:hover:text-white dark:hover:bg-teal-700 focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-600"
-                >
-                  <span class="sr-only">View notifications</span>
-                  <!-- Icon -->
-                  <svg
-                    class="w-4 h-4"
-                    aria-hidden="true"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="currentColor"
-                    viewBox="0 0 18 18"
+                <div x-data="{ open: false }" class="relative">
+                  <button
+                    type="button"
+                    @click="open = ! open"
+                    class="p-2 text-teal-500 rounded-lg hover:text-teal-900 hover:bg-teal-100 dark:text-teal-400 dark:hover:text-white dark:hover:bg-teal-700 focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-600"
                   >
-                    <path
-                      d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z"
-                    />
-                  </svg>
-                </button>
+                    <!-- Icon -->
+                    <svg
+                      class="w-4 h-4"
+                      aria-hidden="true"
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="currentColor"
+                      viewBox="0 0 18 18"
+                    >
+                      <path
+                        d="M6.143 0H1.857A1.857 1.857 0 0 0 0 1.857v4.286C0 7.169.831 8 1.857 8h4.286A1.857 1.857 0 0 0 8 6.143V1.857A1.857 1.857 0 0 0 6.143 0Zm10 0h-4.286A1.857 1.857 0 0 0 10 1.857v4.286C10 7.169 10.831 8 11.857 8h4.286A1.857 1.857 0 0 0 18 6.143V1.857A1.857 1.857 0 0 0 16.143 0Zm-10 10H1.857A1.857 1.857 0 0 0 0 11.857v4.286C0 17.169.831 18 1.857 18h4.286A1.857 1.857 0 0 0 8 16.143v-4.286A1.857 1.857 0 0 0 6.143 10Zm10 0h-4.286A1.857 1.857 0 0 0 10 11.857v4.286c0 1.026.831 1.857 1.857 1.857h4.286A1.857 1.857 0 0 0 18 16.143v-4.286A1.857 1.857 0 0 0 16.143 10Z"
+                      />
+                    </svg></button>
+
+                  <div
+                    class="absolute top-10 right-2 p-5 bg-white border rounded shadow"
+                    x-show="open"
+                    @click.outside="open = false"
+                  >
+                    <ul>
+                      <li>
+                        <a
+                          href="/profile"
+                          class="inline-block px-4 py-2 text-lg font-normal text-teal-800 no-underline rounded-md dark:text-teal-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-teal-800"
+                        >
+                          Profile
+                        </a>
+                      </li>
+                      <li>
+                        <a
+                          href="/profile/ChangePassword"
+                          class="inline-block px-4 py-2 text-lg font-normal text-teal-800 no-underline rounded-md dark:text-teal-200 hover:text-indigo-500 focus:text-indigo-500 focus:bg-indigo-100 focus:outline-none dark:focus:bg-teal-800"
+                        >
+                          Change Password
+                        </a>
+                      </li>
+                    </ul>
+                  </div>
+                </div>
                 <button
                   type="button"
                   class="flex mx-3 text-sm bg-teal-800 rounded-full focus:ring-4 focus:ring-teal-300 dark:focus:ring-teal-600"

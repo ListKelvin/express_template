@@ -17,6 +17,8 @@ import { Response } from "express";
 import WatchModel from "../models/watch.model";
 import { get } from "mongoose";
 import BrandModel from "../models/brand.model";
+import { verifyToken } from "../utils/jwt";
+import MemberModal from "../models/member.model";
 const { NotFound } = AppErrorCodes;
 export const createWatchHandler = catchErrors(async (req, res) => {
   const request = validateRequest(createWatchSchema, {
@@ -63,6 +65,7 @@ export const searchWatches = async (req: any, res: Response) => {
     const watches = await WatchModel.find(
       {
         watchName: { $regex: req.body.search, $options: "i" },
+        automatic: true,
       },
       {},
       {
@@ -89,13 +92,15 @@ export const renderAllWatchHandler = async (req: any, res: Response) => {
     const brandName = req.query.brandName;
     const searchQuery = req.query.searchQuery;
     const { watches } = await getAllWatch({ brandName, searchQuery });
+    const { payload } = verifyToken(req.cookies.accessToken);
+    const member = await MemberModal.findOne({ _id: payload?.memberId });
 
     return res.render("./watches/watches", {
       watches,
       search: searchQuery,
       brandName: brandName,
       isLoggedIn: !!req.cookies.accessToken,
-      // user: req.session.user,
+      member: member?.role,
     });
   } catch (err: any) {
     res.render("404", {});

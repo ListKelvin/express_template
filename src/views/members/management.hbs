@@ -1,8 +1,7 @@
 <!-- ====== Modal Section End -->
-<section class="bg-white pt-30 lg:pt-[60px]">
+<section class="pt-30 lg:pt-[60px]">
   <section x-data="{createModalOpen: false}" class="pt-10">
-    <div class="container pt-20 pb-10 mx-auto flex justify-end">
-    </div>
+
     <div
       x-show="createModalOpen"
       x-transition
@@ -13,10 +12,10 @@
         class="w-full max-w-[570px] rounded-[20px] bg-white py-12 px-8 text-center md:py-[60px] md:px-[70px]"
       >
         <h3 class="pb-[18px] text-xl font-semibold text-dark sm:text-2xl">
-          Create orchid
+          Create watch
         </h3>
         <br />
-        <form id="create" x-init method="post" action="/orchids">
+        <form id="create" x-init method="post" action="/w">
           <div class="mb-6">
             <input
               type="text"
@@ -132,77 +131,95 @@
       </div>
     </div>
   </section>
-  <div class="container mx-auto">
-    <div class="flex flex-wrap -mx-4">
-      <div class="w-full px-4">
-        <h3 class="pb-[18px] text-xl font-semibold text-dark sm:text-2xl">
-          All Accounts
-        </h3>
-        <div class="max-w-full overflow-x-auto">
-          <table class="w-full table-auto">
-            <thead>
-              <tr class="text-center bg-indigo-400">
+  <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 mb-10  z-9">
+    <div class="flex flex-col ">
+      <div class="py-2 -my-2 overflow-x-auto sm:-mx-6 sm:px-6 lg:-mx-8 lg:px-8">
+        <div
+          class=" inline-block max-h-[700px] scroll-smooth overflow-y-auto relative   min-w-full overflow-hidden align-middle border-b border-gray-200 shadow sm:rounded-lg"
+        >
+          <table class="min-w-full relative">
+            <thead class="sticky top-0 left-0 right-0">
+              <tr>
                 <th
-                  class="w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-medium text-white lg:py-7 lg:px-4"
+                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
                 >
-                  #
+                  ID</th>
+                <th
+                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                >
+                email</th>
+                 <th
+                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                >
+                  Member Name
+                </th>
+                           <th
+                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                >
+                    role
+                </th>
+                           <th
+                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
+                >
+           verified
                 </th>
                 <th
-                  class="w-1/6 min-w-[160px] py-4 px-3 text-lg font-medium text-white lg:py-7 lg:px-4"
+                  class="px-6 py-3 text-xs font-medium leading-4 tracking-wider text-left text-gray-500 uppercase border-b border-gray-200 bg-gray-50"
                 >
-                  ID
-                </th>
-                <th
-                  class="w-1/6 min-w-[160px] py-4 px-3 text-lg font-medium text-white lg:py-7 lg:px-4"
-                >
-                  Avatar
-                </th>
-                <th
-                  class="w-1/6 min-w-[160px] py-4 px-3 text-lg font-medium text-white lg:py-7 lg:px-4"
-                >
-                  Username
-                </th>
-                <th
-                  class="w-1/6 min-w-[160px] py-4 px-3 text-lg font-medium text-white lg:py-7 lg:px-4"
-                >
-                  Created At
-                </th>
+                  Created At</th>
+          
+                
               </tr>
             </thead>
-            <tbody x-init id="users">
-              {{#each users}}
+            <tbody class="bg-white h-64">
+              {{#each members}}
                 <tr>
-                  <td
-                    class="text-dark border-b border-l border-[#E8E8E8] bg-white py-5 px-5 text-center text-base font-medium"
+                 <td
+                    class="text-dark border-b border-l border-[#E8E8E8] bg-white py-5 px-5  text-base font-medium"
                   >
                     {{inc @index}}
                   </td>
                   <td
-                    class="text-dark border-b border-[#E8E8E8] bg-white py-5 px-5 text-left text-base font-medium"
+                    class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200"
                   >
-                    {{this._id}}
+                    {{this.email}}
+                    
                   </td>
                   <td
-                    class="text-dark border-b border-[#E8E8E8] bg-white py-5 px-5 text-center text-base font-medium"
+                    class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200"
                   >
-                    <p
-                      class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"
-                    ><img
-                        class="mr-2 w-6 h-6 rounded-full"
-                        src="{{this.avatar}}"
-                        alt="Michael Gough"
-                      /></p>
+                    {{this.memberName}}
+                    
                   </td>
-                  <td
-                    class="text-dark border-b border-[#E8E8E8] bg-white py-5 px-5 text-left text-base font-medium"
+                        <td
+                    class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200"
                   >
-                    {{this.username}}
+                    {{this.role}}
+                    
                   </td>
-                  <td
-                    class="text-dark border-b border-[#E8E8E8] bg-white py-5 px-5 text-center text-base font-medium"
+                        <td
+                    class="px-6 py-4 text-sm leading-5 text-gray-500 whitespace-no-wrap border-b border-gray-200"
+                  >
+                 <div class='mb-6'>
+                              <label for='checkboxIsAutomatic' class='flex items-center cursor-pointer select-none text-dark '>
+                                <div class='relative mx-3'>
+                                  <input id="checkboxIsVerified" type="checkbox" disabled  name='verified'  {{#if this.verified}}checked{{/if}} class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"/>
+
+
+                                </div>
+                                Is Verified?
+                              </label>
+                            </div>
+                    
+                  </td>
+
+                  
+                   <td
+                    class="text-dark border-b border-[#E8E8E8] bg-white text-base font-medium"
                   >
                     {{prettifyDate this.createdAt}}
                   </td>
+              
                 </tr>
               {{/each}}
             </tbody>
@@ -210,6 +227,7 @@
         </div>
       </div>
     </div>
+
   </div>
 
 </section>
