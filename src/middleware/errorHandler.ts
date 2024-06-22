@@ -4,8 +4,10 @@ import AppError from "../utils/AppError";
 import { BAD_REQUEST, INTERNAL_SERVER_ERROR } from "../constant/http";
 import AppErrorCodes from "../constant/appErrorCodes";
 import { clearAuthCookies } from "../utils/cookies";
+import { verifyToken } from "../utils/jwt";
+import MemberModal from "../models/member.model";
 
-const handleValidationError = (
+const handleValidationError = async (
   req: Request,
   res: Response,
   error: ValidationError
@@ -14,14 +16,27 @@ const handleValidationError = (
     key: detail.context?.key,
     message: detail.message,
   }));
+  const { payload } = verifyToken(req.cookies.accessToken);
+  const member = await MemberModal.findOne({ _id: payload?.memberId });
 
   // Extract the original URL from the request (excluding query parameters)
   const originalUrl = "." + req.url;
+  // console.log(originalUrl.startsWith("./watches"));
 
   if (originalUrl.includes("./members/changePassword")) {
     res.render(originalUrl, {
       error: error,
       message: error.message,
+      isLoggedIn: !!req.cookies.accessToken,
+      member: member?.role,
+    });
+  } else if (originalUrl.includes("./watches/management")) {
+    res.render("400", {
+      error: error,
+      message: error.message,
+      errorMessage: error.message,
+      isLoggedIn: !!req.cookies.accessToken,
+      member: member?.role,
     });
   } else {
     res.render(originalUrl, {
@@ -29,9 +44,19 @@ const handleValidationError = (
       errors,
       error: error,
       message: error.message,
+      isLoggedIn: !!req.cookies.accessToken,
+      member: member?.role,
     });
   }
-
+  //  else if (originalUrl.startsWith("./watches")) {
+  //     res.render(`./watches/watchDetail`, {
+  //       errors,
+  //       error: error,
+  //       message: error.message,
+  //       isLoggedIn: !!req.cookies.accessToken,
+  //       member: member?.role,
+  //     });
+  //   }
   // return res.status(BAD_REQUEST).json({
   //   errors,
   //   message: error.message,

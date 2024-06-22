@@ -4,6 +4,8 @@ import {
   getAllUserHandler,
   getAllUserHandlerSSR,
   getUserHandlerSSR,
+  renderProfileHandler,
+  updateProfileHandler,
 } from "../controllers/user.controller";
 import { Authorization } from "../middleware/authorization";
 import Roles from "../constant/roles";
@@ -19,6 +21,10 @@ userRoutes
   .route("/accounts")
   .get(Authorization([Roles.ADMIN]), getAllUserHandlerSSR);
 userRoutes.route("/member").get(getUserHandlerSSR);
+userRoutes
+  .route("/member/update")
+  .get(renderProfileHandler)
+  .post(updateProfileHandler);
 
 userRoutes
   .route("/members/changePassword")

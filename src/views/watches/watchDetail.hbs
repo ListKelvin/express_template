@@ -68,11 +68,11 @@
             <div
               class="py-2 px-4 mb-4 bg-white rounded-lg rounded-t-lg border border-gray-200 dark:bg-gray-800 dark:border-gray-700"
             >
-              <label for="comment" class="sr-only">Your comment</label>
+              <label for="content" class="sr-only">Your comment</label>
               <textarea
-                id="comment"
+                id="content"
                 rows="6"
-                name="comment"
+                name="content"
                 class="px-0 w-full text-sm text-gray-900 border-0 focus:ring-0 focus:outline-none dark:text-white dark:placeholder-gray-400 dark:bg-gray-800"
                 placeholder="Write a comment..."
                 required
@@ -89,22 +89,21 @@
               id="watchId"
               name="watchId"
               value="{{_id}}"
-            /><br /><br />
+            /><br />
+
+            <br />
           </form>
         {{/if}}
+        {{log comments}}
         {{#each comments}}
           <article class="p-6 text-base bg-white rounded-lg dark:bg-gray-900">
             <footer class="flex justify-between items-center mb-2">
               <div class="flex items-center">
-                {{#with this.author}}
-                  <p
-                    class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"
-                  ><img
-                      class="mr-2 w-6 h-6 rounded-full"
-                      src="{{avatar}}"
-                      alt="Michael Gough"
-                    />{{username}}</p>
-                {{/with}}
+
+                <p
+                  class="inline-flex items-center mr-3 text-sm text-gray-900 dark:text-white font-semibold"
+                > {{this.author.memberName}}</p>
+
                 <p class="text-sm text-gray-600 dark:text-gray-400"><time
                     pubdate
                     datetime="2022-02-08"
@@ -131,7 +130,11 @@
                 <span class="sr-only">Comment settings</span>
               </button>
             </footer>
-            <p class="text-gray-500 dark:text-gray-400">{{this.comment}}
+            <p class="text-gray-500 dark:text-gray-400">Rating:
+              {{this.rating}}
+            </p>
+            <p class="text-gray-500 dark:text-gray-400">Comment:
+              {{this.content}}
             </p>
           </article>
         {{/each}}

@@ -9,9 +9,29 @@ import validateRequest from "../utils/validateRequest";
 export const createCommentHandler = catchErrors(async (req, res) => {
   const { payload } = verifyToken(req.cookies.accessToken);
   const member = await MemberModal.findOne({ _id: payload?.memberId });
-  const request = validateRequest(createCommentSchema, {
-    ...req.body,
-  });
+  const watchDe = await WatchModel.findOne({ _id: req.body.watchId });
+  const { rating, content } = req.body;
+  // const request = validateRequest(createCommentSchema, {
+  //   ...req.body,
+  // });
+  if (watchDe == null) {
+    res.redirect("404");
+  } else {
+    if (parseInt(rating) <= 0 || content == "" || parseInt(rating) >= 4) {
+      console.log("rating", rating);
+
+      res.render("/watches/watchDetail", {
+        _id: watchDe._id,
+        name: watchDe.watchName,
+        price: watchDe.price,
+        image: watchDe.image,
+        description: watchDe.watchDescription,
+        isAutomatic: watchDe.automatic,
+        brandId: watchDe?.brandId.brandName,
+        errorMessage: "Content or Rating is invalid",
+      });
+    }
+  }
 
   const commentDoc = await CommentModel.findOne({
     author: member?._id,
@@ -25,9 +45,10 @@ export const createCommentHandler = catchErrors(async (req, res) => {
     });
   }
   const commentDocument = await CommentModel.create({
-    comment: request.comment,
+    content: req.body.content,
+    rating: req.body.rating,
     author: member?._id,
-    watchId: request.body.watchId,
+    watchId: req.body.watchId,
   });
 
   const watch = await WatchModel.findById(req.body.watchId);

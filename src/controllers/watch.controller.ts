@@ -90,12 +90,12 @@ export const searchWatches = async (req: any, res: Response) => {
   }
 };
 export const renderAllWatchHandler = async (req: any, res: Response) => {
+  const { payload } = verifyToken(req.cookies.accessToken);
+  const member = await MemberModal.findOne({ _id: payload?.memberId });
   try {
     const brandName = req.query.brandName;
     const searchQuery = req.query.searchQuery;
     const { watches } = await getAllWatch({ brandName, searchQuery });
-    const { payload } = verifyToken(req.cookies.accessToken);
-    const member = await MemberModal.findOne({ _id: payload?.memberId });
 
     return res.render("./watches/watches", {
       watches,
@@ -105,11 +105,16 @@ export const renderAllWatchHandler = async (req: any, res: Response) => {
       member: member?.role,
     });
   } catch (err: any) {
-    res.render("404", {});
+    res.render("404", {
+      isLoggedIn: !!req.cookies.accessToken,
+      member: member?.role,
+    });
   }
 };
 
 export const renderManagementWatches = async (req: any, res: Response) => {
+  const { payload } = verifyToken(req.cookies.accessToken);
+  const member = await MemberModal.findOne({ _id: payload?.memberId });
   try {
     const brands = await BrandModel.find({}).lean();
     let watches = await WatchModel.find(
@@ -128,32 +133,49 @@ export const renderManagementWatches = async (req: any, res: Response) => {
       watches,
       brands,
       isLoggedIn: !!req.cookies.accessToken,
-      member: "admin",
+      member: member?.role,
     });
   } catch (err: any) {
     res.render("404", {
       isLoggedIn: !!req.cookies.accessToken,
-      // user: req.session.user,
+      member: member?.role,
     });
   }
 };
 
 export const renderGetWatchById = async (req: any, res: Response) => {
+  const { payload } = verifyToken(req.cookies.accessToken);
+  const member = await MemberModal.findOne({ _id: payload?.memberId });
   try {
-    const { payload } = verifyToken(req.cookies.accessToken);
-    const member = await MemberModal.findOne({ _id: payload?.memberId });
     const watch = await WatchModel.findOne(
       { _id: req.params?.watchId },
       {},
       {
-        populate: ["brandId", "comments"],
+        populate: ["brandId"],
       }
     );
+
+    // const data = await Promise.all(
+    //   watchơ.comments?.map(async (comment: any) => {
+    //     const commentMessage = await CommentModel.find({ _id: comment })
+    //       .populate("author")
+    //       .lean();
+
+    //     return commentMessage;
+    //   })
+    // );
+    // console.log(data);
+    const commentsss = await CommentModel.find({
+      watchId: watch?._id,
+    })
+      .populate("author")
+      .lean();
 
     const comment = await CommentModel.findOne({
       watchId: watch?._id,
       author: member?._id,
     });
+
     if (!watch) {
       res.render("404", {
         isLoggedIn: !!req.cookies.accessToken,
@@ -163,13 +185,15 @@ export const renderGetWatchById = async (req: any, res: Response) => {
     }
     res.render("./watches/watchDetail", {
       _id: watch._id,
-      name: watch.watchName,
+      watchName: watch.watchName,
       price: watch.price,
       image: watch.image,
       description: watch.watchDescription,
+      // author: member,
       isAutomatic: watch.automatic,
       brandId: watch.brandId.brandName,
-      comments: watch.comments?.map((comment: any) => comment.toJSON()),
+      comments: commentsss,
+      // comments: data,
       commentCount: watch.comments?.length,
       isLoggedIn: !!req.cookies.accessToken,
       member: member?.role,
@@ -179,7 +203,7 @@ export const renderGetWatchById = async (req: any, res: Response) => {
     console.log(err);
     res.render("404", {
       isLoggedIn: !!req.cookies.accessToken,
-      // user: req.session.user,
+      member: member?.role,
     });
   }
 };

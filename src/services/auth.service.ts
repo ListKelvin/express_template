@@ -44,7 +44,7 @@ const {
 } = AppErrorCodes;
 
 export const createAccount = async (
-  data: Pick<Member, "email" | "memberName" | "password"> &
+  data: Pick<Member, "email" | "memberName" | "phone" | "YOB" | "password"> &
     Pick<SessionDocument, "userAgent">
 ) => {
   // verify email is not taken
@@ -57,6 +57,9 @@ export const createAccount = async (
     email: data.email,
     memberName: data.memberName,
     password: data.password,
+    phone: data.phone,
+    YOB: data.YOB,
+    isAdmin: false,
     role: Roles.MEMBER,
   });
 
@@ -162,12 +165,14 @@ export const changePasswordService = async ({
   newPassword: string;
   payload: AccessToken;
 }) => {
+  console.log(payload);
+
   const member = await MemberModal.findOne({ _id: payload?.memberId });
 
-  appAssert(member, NotFound, "Invalid member or password", NOT_FOUND);
+  appAssert(member, NotFound, "NotFound Member", NOT_FOUND);
 
   appAssert(
-    newPassword.includes(oldPassword),
+    !newPassword.includes(oldPassword),
     ValidateFailed,
     "New password must not match with the previous passwords.",
     BAD_REQUEST
@@ -180,10 +185,10 @@ export const changePasswordService = async ({
     "Invalid member name or password",
     UNAUTHORIZED
   );
-
+  const hashPassword = await hashValue(newPassword);
   const newMem = await MemberModal.updateOne(
     { _id: member._id },
-    { $set: { password: newPassword } }
+    { $set: { password: hashPassword } }
   );
   return { newMem };
 };

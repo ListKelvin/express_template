@@ -4,6 +4,7 @@ import { NOT_FOUND, OK } from "../constant/http";
 import Roles from "../constant/roles";
 import MemberModal from "../models/member.model";
 import UserModel from "../models/user.model";
+import { updateMemberSchema } from "../schema/auth.schemas";
 import appAssert from "../utils/appAssert";
 import catchErrors from "../utils/catchErrors";
 import { verifyToken } from "../utils/jwt";
@@ -57,4 +58,27 @@ export const getUserHandlerSSR = catchErrors(async (req, res) => {
       member: profile?.role,
     });
   }
+});
+
+export const updateProfileHandler = catchErrors(async (req, res) => {
+  const request = validateRequest(updateMemberSchema, {
+    ...req.body,
+  });
+
+  const updateProfile = await MemberModal.findByIdAndUpdate(req.body.id, data, {
+    new: true,
+  });
+
+  return res.redirect("/member");
+});
+export const renderProfileHandler = catchErrors(async (req, res) => {
+  const { payload } = verifyToken(req.cookies.accessToken);
+  const member = await MemberModal.findOne({ _id: payload?.memberId });
+
+  return res.render("./members/updateProfile", {
+    profile: member,
+    isLoggedIn: !!req.cookies.accessToken,
+
+    member: member.role,
+  });
 });

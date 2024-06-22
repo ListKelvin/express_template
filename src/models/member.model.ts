@@ -22,6 +22,7 @@ export interface Member extends mongoose.Document {
     | "memberName"
     | "phone"
     | "YOB"
+    | "isAdmin"
     | "verified"
     | "createdAt"
     | "updatedAt"

@@ -85,6 +85,8 @@ export const registerHandler = catchErrors(async (req, res) => {
     ...req.body,
     userAgent: req.headers["user-agent"],
   });
+  console.log(request);
+
   const { member, accessToken, refreshToken } = await createAccount(request);
 
   return setAuthCookies({ res, accessToken, refreshToken }).redirect(
@@ -93,14 +95,16 @@ export const registerHandler = catchErrors(async (req, res) => {
 });
 
 export const changePasswordHandlerSSR = catchErrors(async (req, res) => {
+  const { payload } = verifyToken(req.cookies.accessToken);
+
   const request = validateRequest(changePasswordMemberSchema, {
     ...req.body,
   });
 
-  const { newMem } = await changePasswordService(request);
+  const { newMem } = await changePasswordService({ ...request, payload });
   console.log(newMem);
 
-  return clearAuthCookies(res).redirect("/login");
+  return clearAuthCookies(res).redirect("/auth/login");
 
   // .json(member)
 });

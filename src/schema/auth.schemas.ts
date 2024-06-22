@@ -31,12 +31,19 @@ export const registerMemberSchema = Joi.object({
   memberName: memberNameSchema,
   userAgent: Joi.string().optional(),
   phone: Joi.string().required(),
-  yearofbỉth: Joi.string().required(),
+  YOB: Joi.string().required(),
   avatar: Joi.string().optional(),
   password: passwordSchema,
   confirmPassword: Joi.string().valid(Joi.ref("password")).required().messages({
     "any.only": "Passwords do not match",
   }),
+});
+export const updateMemberSchema = Joi.object({
+  email: emailSchema,
+  memberName: memberNameSchema,
+  phone: Joi.string().optional(),
+  YOB: Joi.string().optional(),
+  avatar: Joi.string().optional(),
 });
 export const changePasswordMemberSchema = Joi.object({
   oldPassword: passwordSchema,
