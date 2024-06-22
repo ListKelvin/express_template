@@ -90,9 +90,8 @@ export const registerHandler = catchErrors(async (req, res) => {
   return setAuthCookies({ res, accessToken, refreshToken }).redirect(
     "/auth/login"
   );
-
-  // .json(member)
 });
+
 export const changePasswordHandlerSSR = catchErrors(async (req, res) => {
   const request = validateRequest(changePasswordMemberSchema, {
     ...req.body,

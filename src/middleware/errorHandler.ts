@@ -24,7 +24,6 @@ const handleValidationError = (
       message: error.message,
     });
   } else {
-    // res.locals.error = error;
     res.render(originalUrl, {
       layout: false,
       errors,

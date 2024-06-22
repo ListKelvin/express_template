@@ -31,8 +31,8 @@ export const registerMemberSchema = Joi.object({
   memberName: memberNameSchema,
   userAgent: Joi.string().optional(),
   phone: Joi.string().required(),
-  YOB: Joi.string().required(),
-  avatar: Joi.string().required(),
+  yearofbỉth: Joi.string().required(),
+  avatar: Joi.string().optional(),
   password: passwordSchema,
   confirmPassword: Joi.string().valid(Joi.ref("password")).required().messages({
     "any.only": "Passwords do not match",

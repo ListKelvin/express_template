@@ -39,7 +39,7 @@ const memberSchema = new mongoose.Schema<Member>(
     verified: { type: Boolean, required: true, default: false },
     isAdmin: { type: Boolean, default: false },
     phone: { type: String, required: false },
-    YOB: { type: String, required: true, unique: true },
+    YOB: { type: String, required: true },
   },
   {
     timestamps: true,
