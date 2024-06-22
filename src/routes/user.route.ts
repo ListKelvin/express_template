@@ -18,9 +18,10 @@ const userRoutes = Router();
 userRoutes
   .route("/accounts")
   .get(Authorization([Roles.ADMIN]), getAllUserHandlerSSR);
-userRoutes.route("/profile").get(getUserHandlerSSR);
+userRoutes.route("/member").get(getUserHandlerSSR);
+
 userRoutes
-  .route("/profile/changePassword")
+  .route("/members/changePassword")
   .get(renderChangePasswordHandler)
   .post(changePasswordHandlerSSR);
 // userRoutes.get("/", getAllUserHandler);

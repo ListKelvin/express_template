@@ -22,7 +22,7 @@ export const commentSchema = new mongoose.Schema<Comment>(
     },
     watchId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Brand",
+      ref: "Watch",
       require: true,
     },
   },

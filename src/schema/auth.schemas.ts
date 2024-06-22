@@ -41,9 +41,12 @@ export const registerMemberSchema = Joi.object({
 export const changePasswordMemberSchema = Joi.object({
   oldPassword: passwordSchema,
   newPassword: passwordSchema,
-  confirmPassword: Joi.string().valid(Joi.ref("password")).required().messages({
-    "any.only": "Passwords do not match",
-  }),
+  confirmPassword: Joi.string()
+    .valid(Joi.ref("newPassword"))
+    .required()
+    .messages({
+      "any.only": "Confirm Password do not match with New Password",
+    }),
 });
 export const verificationCodeSchema = Joi.string().min(1).max(24).required();
 

@@ -19,6 +19,8 @@ import { get } from "mongoose";
 import BrandModel from "../models/brand.model";
 import { verifyToken } from "../utils/jwt";
 import MemberModal from "../models/member.model";
+import CommentModel from "../models/comment.model";
+import Roles from "../constant/roles";
 const { NotFound } = AppErrorCodes;
 export const createWatchHandler = catchErrors(async (req, res) => {
   const request = validateRequest(createWatchSchema, {
@@ -138,21 +140,24 @@ export const renderManagementWatches = async (req: any, res: Response) => {
 
 export const renderGetWatchById = async (req: any, res: Response) => {
   try {
+    const { payload } = verifyToken(req.cookies.accessToken);
+    const member = await MemberModal.findOne({ _id: payload?.memberId });
     const watch = await WatchModel.findOne(
       { _id: req.params?.watchId },
       {},
       {
-        populate: ["brandId"],
+        populate: ["brandId", "comments"],
       }
     );
-    // const comment = await CommentModel.findOne({
-    //   orchid: orchid?._id,
-    //   author: req.session.user?._id,
-    // });
+
+    const comment = await CommentModel.findOne({
+      watchId: watch?._id,
+      author: member?._id,
+    });
     if (!watch) {
       res.render("404", {
-        // isLoggedIn: !!req.session.user,
-        // user: req.session.user,
+        isLoggedIn: !!req.cookies.accessToken,
+        member: member?.role,
       });
       return;
     }
@@ -164,17 +169,16 @@ export const renderGetWatchById = async (req: any, res: Response) => {
       description: watch.watchDescription,
       isAutomatic: watch.automatic,
       brandId: watch.brandId.brandName,
-
-      // comments: watch.comments?.map((comment: any) => comment.toJSON()),
-      // commentCount: watch.comments?.length,
-      // isLoggedIn: !!req.session.user,
-      // user: req.session.user,
-      // canComment: req.session.user?.role === UserRole.MEMBER && !comment,
+      comments: watch.comments?.map((comment: any) => comment.toJSON()),
+      commentCount: watch.comments?.length,
+      isLoggedIn: !!req.cookies.accessToken,
+      member: member?.role,
+      canComment: member?.role === Roles.MEMBER && !comment,
     });
   } catch (err: any) {
     console.log(err);
     res.render("404", {
-      // isLoggedIn: !!req.session.user,
+      isLoggedIn: !!req.cookies.accessToken,
       // user: req.session.user,
     });
   }

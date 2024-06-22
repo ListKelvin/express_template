@@ -18,13 +18,20 @@ const handleValidationError = (
   // Extract the original URL from the request (excluding query parameters)
   const originalUrl = "." + req.url;
 
-  // res.locals.error = error;
-  res.render(originalUrl, {
-    layout: false,
-    errors,
-    error: error,
-    message: error.message,
-  });
+  if (originalUrl.includes("./members/changePassword")) {
+    res.render(originalUrl, {
+      error: error,
+      message: error.message,
+    });
+  } else {
+    // res.locals.error = error;
+    res.render(originalUrl, {
+      layout: false,
+      errors,
+      error: error,
+      message: error.message,
+    });
+  }
 
   // return res.status(BAD_REQUEST).json({
   //   errors,
@@ -38,12 +45,21 @@ const handleAppError = (req: Request, res: Response, error: AppError) => {
   }
   const originalUrl = "." + req.url;
 
-  res.render(originalUrl, {
-    layout: false,
-    error: error,
-    message: error.message,
-    errorCode: error.errorCode,
-  });
+  if (originalUrl.includes("./members/changePassword")) {
+    res.render(originalUrl, {
+      error: error,
+      message: error.message,
+    });
+  } else {
+    // res.locals.error = error;
+    res.render(originalUrl, {
+      layout: false,
+
+      error: error,
+      message: error.message,
+    });
+  }
+
   // return res.status(error.statusCode).json({
   //   message: error.message,
   //   errorCode: error.errorCode,

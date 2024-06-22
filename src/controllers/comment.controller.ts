@@ -1,0 +1,38 @@
+import CommentModel from "../models/comment.model";
+import MemberModal from "../models/member.model";
+import WatchModel from "../models/watch.model";
+import { createCommentSchema } from "../schema/comment.schemas";
+import catchErrors from "../utils/catchErrors";
+import { verifyToken } from "../utils/jwt";
+import validateRequest from "../utils/validateRequest";
+
+export const createCommentHandler = catchErrors(async (req, res) => {
+  const { payload } = verifyToken(req.cookies.accessToken);
+  const member = await MemberModal.findOne({ _id: payload?.memberId });
+  const request = validateRequest(createCommentSchema, {
+    ...req.body,
+  });
+
+  const commentDoc = await CommentModel.findOne({
+    author: member?._id,
+    watchId: req.body.watchId,
+  }).lean();
+  if (commentDoc) {
+    return res.render("400", {
+      errorMessage: `You have commented this orchid before.`,
+      isLoggedIn: !!req.cookies.accessToken,
+      member: member?.role,
+    });
+  }
+  const commentDocument = await CommentModel.create({
+    comment: request.comment,
+    author: member?._id,
+    watchId: request.body.watchId,
+  });
+
+  const watch = await WatchModel.findById(req.body.watchId);
+  watch?.comments?.push(commentDocument._id);
+  watch?.save();
+
+  return res.redirect(`/watches/${watch?._id}`);
+});

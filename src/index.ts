@@ -17,6 +17,7 @@ import moment from "moment";
 import watchRoutes from "./routes/watch.route";
 import brandRoutes from "./routes/brand.route";
 import { renderAllWatchHandler } from "./controllers/watch.controller";
+import commentRouter from "./routes/comments.route";
 // initialize modules and middleware
 
 const app = express();
@@ -44,6 +45,7 @@ app.use("/nation", nationRoutes);
 app.use("/players", playerRoutes);
 app.use("/watches", watchRoutes);
 app.use("/brands", brandRoutes);
+app.use("/comments", commentRouter);
 
 app.set("view engine", "hbs");
 app.set("views", path.join(__dirname + "/views"));
